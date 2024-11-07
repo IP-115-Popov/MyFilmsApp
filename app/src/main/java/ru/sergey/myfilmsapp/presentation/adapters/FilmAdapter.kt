@@ -9,8 +9,11 @@ import ru.sergey.domain.model.Film
 import ru.sergey.myfilmsapp.R
 import ru.sergey.myfilmsapp.databinding.FilmItemBinding
 
-class FilmAdapter(var items: List<Film>, val noItemClick: (Long)->Unit ) :
-    RecyclerView.Adapter<FilmAdapter.MyViewHolder>() {
+class FilmAdapter(
+    var items: List<Film>,
+    val noItemClick: (Long)->Unit
+) : RecyclerView.Adapter<FilmAdapter.MyViewHolder>() {
+
     fun replaceAllFilm(films: List<Film>) {
         items = films
         notifyDataSetChanged()
@@ -21,7 +24,7 @@ class FilmAdapter(var items: List<Film>, val noItemClick: (Long)->Unit ) :
         notifyDataSetChanged()
     }
 
-    class MyViewHolder(view: View, val noItemClick: (Long)->Unit) : RecyclerView.ViewHolder(view) {
+    inner class MyViewHolder(view: View, val noItemClick: (Long)->Unit) : RecyclerView.ViewHolder(view) {
         val binding = FilmItemBinding.bind(view)
         fun bind(film: Film) = with(binding) {
             //отобразить картинку

@@ -6,4 +6,10 @@
     </style>
 
     <style name="Theme.MyFilmsApp" parent="Base.Theme.MyFilmsApp" />
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryColorDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
 </resources>
