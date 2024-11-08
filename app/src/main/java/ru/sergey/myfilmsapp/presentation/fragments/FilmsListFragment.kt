@@ -52,13 +52,13 @@ class FilmsListFragment : Fragment() {
             .commit()
     }
 
-    fun onGenreClick(genre: String) {
-        vm.getFilms(genre)
-    }
+//    fun onGenreClick(genre: String) {
+//        vm.getFilms(genre)
+//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.fragmentFilmListCompose.setContent @OptIn(ExperimentalLayoutApi::class) {
-            FilmListScreen(vm, ::onGenreClick, ::onFilmClick)
+            FilmListScreen(vm, ::onFilmClick)
         }
     }
 

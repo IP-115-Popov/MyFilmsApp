@@ -52,7 +52,7 @@ import ru.sergey.myfilmsapp.presentation.viewmodel.MainViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilmListScreen(
-    vm: MainViewModel, onGenreSelected: (String) -> Unit, onFilmSelected: (Long) -> Unit
+    vm: MainViewModel, onFilmSelected: (Long) -> Unit
 ) {
     val genres = remember { vm.genres }
     val films = vm.films.collectAsState()
@@ -106,9 +106,16 @@ fun FilmListScreen(
                 items(genres) { genre ->
                     GenreItem(genre,
                         modifier = Modifier.padding(startPadding),
-                        onGenreSelected,
                         selectedGenre,
-                        { selectedGenre.value = genre })
+                        {
+                            if ( selectedGenre.value == genre )
+                            {
+                                selectedGenre.value = null
+                            } else {
+                                selectedGenre.value = genre
+                            }
+                            vm.getFilms(selectedGenre.value)
+                        })
                 }
                 item {
                     Box(
@@ -147,16 +154,17 @@ fun FilmListScreen(
 fun GenreItem(
     genre: String,
     modifier: Modifier,
-    onGenreSelected: (String) -> Unit,
     selectedGenre: MutableState<String?>,
     onClick: (String) -> Unit
 ) {
     val defaultModifier = Modifier
         .fillMaxWidth()
         .height(40.dp)
-        .background(if (selectedGenre.value == genre) SelectedGenreBackground else BackgroundColor)
+        .background(
+            if (selectedGenre.value == genre)
+                SelectedGenreBackground
+            else BackgroundColor)
         .clickable {
-            onGenreSelected(genre)
             onClick(genre)
         }
     Box(
