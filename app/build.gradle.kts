@@ -46,6 +46,8 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
 
+    implementation("io.arrow-kt:arrow-core:1.2.4")
+
     implementation(libs.fragment)
     implementation(libs.fragment.ktx)
 
