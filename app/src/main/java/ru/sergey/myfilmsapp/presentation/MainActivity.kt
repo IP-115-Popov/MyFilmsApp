@@ -26,10 +26,8 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             openFragment(FilmsListFragment(), R.id.fragment_container)
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val window: Window = window
-            window.statusBarColor = resources.getColor(R.color.primaryColor, theme)
-        }
+        val window: Window = window
+        window.statusBarColor = resources.getColor(R.color.primaryColor, theme)
     }
 
     fun openFragment(fragment: Fragment, idHolder: Int) {

@@ -33,7 +33,7 @@ class FilmsListFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentFilmsListBinding.inflate(inflater)
         return binding.root
     }

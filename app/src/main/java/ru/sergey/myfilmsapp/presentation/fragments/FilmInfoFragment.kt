@@ -30,7 +30,7 @@ class FilmInfoFragment() : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentFilmInfoBinding.inflate(inflater)
         return binding.root
     }

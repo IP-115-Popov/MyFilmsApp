@@ -51,13 +51,11 @@ import ru.sergey.myfilmsapp.presentation.viewmodel.MainViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilmListScreen(
-    vm: MainViewModel,
-    onGenreSelected: (String) -> Unit,
-    onFilmSelected: (Long) -> Unit
+    vm: MainViewModel, onGenreSelected: (String) -> Unit, onFilmSelected: (Long) -> Unit
 ) {
     val genres = remember { vm.genres }
     val films = vm.films.collectAsState()
-    var selectedGenre = remember { mutableStateOf<String?>(null) }
+    val selectedGenre = remember { mutableStateOf<String?>(null) }
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -70,8 +68,7 @@ fun FilmListScreen(
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = PrimaryColor,
-                    titleContentColor = White
+                    containerColor = PrimaryColor, titleContentColor = White
                 ),
             )
         },
@@ -83,16 +80,12 @@ fun FilmListScreen(
                 .background(White)
         )
         if (films.value.size == 0) {
-            ErrorDialog(
-                onRetry = {
-                    vm.getFilms()
-                }
-            )
+            ErrorDialog(onRetry = {
+                vm.getFilms()
+            })
         } else {
             LazyColumn(
-                contentPadding = innerPadding,
-                modifier = Modifier
-                    .fillMaxSize()
+                contentPadding = innerPadding, modifier = Modifier.fillMaxSize()
             ) {
                 item {
                     Box(
@@ -110,14 +103,11 @@ fun FilmListScreen(
                     }
                 }
                 items(genres) { genre ->
-                    GenreItem(
-                        genre,
+                    GenreItem(genre,
                         modifier = Modifier.padding(startPadding),
                         onGenreSelected,
                         selectedGenre,
-                        { genre ->
-                            selectedGenre.value = genre
-                        })
+                        { selectedGenre.value = genre })
                 }
                 item {
                     Box(
@@ -140,14 +130,10 @@ fun FilmListScreen(
                             .padding(startPadding)
                     ) {
                         if (row.getOrNull(0) != null) FilmCard(
-                            row[0],
-                            Modifier.fillMaxWidth(0.5f),
-                            onFilmSelected
+                            row[0], Modifier.fillMaxWidth(0.5f), onFilmSelected
                         )
                         if (row.getOrNull(1) != null) FilmCard(
-                            row[1],
-                            Modifier.fillMaxWidth(),
-                            onFilmSelected
+                            row[1], Modifier.fillMaxWidth(), onFilmSelected
                         )
                     }
                 }
@@ -178,8 +164,7 @@ fun GenreItem(
     ) {
         Text(
             text = genre,
-            modifier = Modifier
-                .align(Alignment.CenterStart),
+            modifier = Modifier.align(Alignment.CenterStart),
             fontSize = 16.sp,
             fontFamily = FontFamily(Font(R.font.roboto_regular))
         )
@@ -193,8 +178,7 @@ fun FilmCard(film: Film, modifier: Modifier = Modifier, onFilmSelected: (Long) -
         .padding(5.dp)
         .clickable {
             onFilmSelected(film.id)
-        }
-    ) {
+        }) {
         Column(Modifier.background(BackgroundColor)) {
             AsyncImage(
                 model = film.image_url,
@@ -220,8 +204,7 @@ fun FilmCard(film: Film, modifier: Modifier = Modifier, onFilmSelected: (Long) -
 @Composable
 fun ErrorDialog(onRetry: () -> Unit) {
     Box(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
     ) {
         Row(
             modifier = Modifier
@@ -237,8 +220,7 @@ fun ErrorDialog(onRetry: () -> Unit) {
                 color = White,
                 fontFamily = FontFamily(Font(R.font.roboto_regular))
             )
-            Text(
-                text = stringResource(R.string.Repeat),
+            Text(text = stringResource(R.string.Repeat),
                 fontFamily = FontFamily(Font(R.font.roboto_regular)),
                 color = SelectedGenreBackground,
                 modifier = Modifier.clickable {
