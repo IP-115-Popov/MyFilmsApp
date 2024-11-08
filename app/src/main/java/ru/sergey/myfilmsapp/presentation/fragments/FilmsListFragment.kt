@@ -38,7 +38,7 @@ class FilmsListFragment : Fragment() {
         return binding.root
     }
 
-    fun onItemClick(id: Long) {
+    fun onFilmClick(id: Long) {
         val bundle = Bundle()
         bundle.putLong(Сonstant.FILM_ID, id)
 
@@ -51,10 +51,13 @@ class FilmsListFragment : Fragment() {
             .addToBackStack(null)
             .commit()
     }
+    fun onGenreClick(genre : String) {
+        vm.getFilms(genre)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.fragmentFilmInfoCompose.setContent @OptIn(ExperimentalLayoutApi::class) {
-            FilmListScreen(vm)
+            FilmListScreen(vm, ::onGenreClick, ::onFilmClick)
         }
     }
 

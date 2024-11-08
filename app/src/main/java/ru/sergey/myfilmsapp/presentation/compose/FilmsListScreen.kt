@@ -1,8 +1,9 @@
 package ru.sergey.myfilmsapp.presentation.compose
 
-import android.util.Log
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,23 +14,43 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ru.sergey.domain.model.Film
+import ru.sergey.myfilmsapp.R
 import ru.sergey.myfilmsapp.presentation.viewmodel.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FilmListScreen(vm : MainViewModel) {
+fun FilmListScreen(vm : MainViewModel,onGenreSelected : (String)->Unit, onFilmSelected : (Long)->Unit ) {
     val genres = remember { vm.genres }
     val films = vm.films.collectAsState()
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Фильмы") })
+            TopAppBar(
+                title = {
+                    Box(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "Фильмы",
+                            modifier = Modifier.align(Alignment.Center),
+                            color = Color.White
+                        )
+                    }
+                },
+                colors= TopAppBarDefaults.topAppBarColors(
+                    containerColor = colorResource(R.color.primaryColor),
+                    titleContentColor = Color.White),
+            )
         }
     ) { innerPadding ->
         LazyColumn(
@@ -39,53 +60,53 @@ fun FilmListScreen(vm : MainViewModel) {
             item {
                 Text(
                     text = "Жанры",
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(16.dp),
+                    fontWeight= FontWeight.Bold
                 )
             }
             items(genres) { genre ->
-                GenreItem(genre)
+                GenreItem(genre,onGenreSelected)
             }
-
             item {
                 Text(
                     text = "Фильмы",
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(16.dp),
+                    fontWeight= FontWeight.Bold
                 )
             }
-            items(films.value) { film ->
-                FilmItem(film)
+            items(films.value.chunked(2)) { row ->
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    if (row.getOrNull(0) != null) FilmCard(row[0], Modifier.fillMaxWidth(0.5f), onFilmSelected)
+                    if (row.getOrNull(1) != null) FilmCard(row[1], Modifier.fillMaxWidth(), onFilmSelected)
+                }
             }
         }
     }
 }
-
 @Composable
-fun GenreItem(genre: String) {
+fun GenreItem(genre: String, onGenreSelected : (String)->Unit) {
     Text(
         text = genre,
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
             .clickable {
-                // Обработка клика по жанру
+                onGenreSelected(genre)
             }
     )
 }
 
 @Composable
-fun FilmItem(film: Film) {
-    Card(
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth(),
+fun FilmCard(film: Film, modifier: Modifier = Modifier, onFilmSelected : (Long)->Unit) {
+    Card(modifier = modifier
+        .clickable {
+            onFilmSelected(film.id)
+        }
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.Start
-        ) {
-            // Здесь вы можете добавить изображение постера фильма
-            Text(text = film.localized_name)
-            // Добавьте другие детали фильма (например, жанр, год и т. д.)
+        Column {
+            //Image(painter = rememberImagePainter(movie.poster), contentDescription = null)
+            Text(film.localized_name)
+
         }
     }
 }

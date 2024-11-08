@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.getActivityViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.sergey.myfilmsapp.databinding.FragmentFilmInfoBinding
 import ru.sergey.myfilmsapp.presentation.viewmodel.MainViewModel
 import ru.sergey.myfilmsapp.Сonstant
