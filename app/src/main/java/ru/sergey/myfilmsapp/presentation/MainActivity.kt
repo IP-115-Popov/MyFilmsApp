@@ -8,7 +8,8 @@ import ru.sergey.myfilmsapp.R
 import ru.sergey.myfilmsapp.databinding.ActivityMainBinding
 import ru.sergey.myfilmsapp.presentation.fragments.FilmsListFragment
 import ru.sergey.myfilmsapp.presentation.viewmodel.MainViewModel
-
+import android.os.Build
+import android.view.Window
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
@@ -24,6 +25,10 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             openFragment(FilmsListFragment(), R.id.fragment_container)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val window: Window = window
+            window.statusBarColor = resources.getColor(R.color.primaryColor, theme)
         }
     }
 
