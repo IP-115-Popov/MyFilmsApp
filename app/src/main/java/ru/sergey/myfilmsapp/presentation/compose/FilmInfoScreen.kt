@@ -30,6 +30,8 @@ import ru.sergey.domain.model.Film
 import ru.sergey.myfilmsapp.presentation.theme.ui.PrimaryColor
 import ru.sergey.myfilmsapp.presentation.theme.ui.White
 import ru.sergey.myfilmsapp.presentation.viewmodel.MainViewModel
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,12 +62,13 @@ fun FilmInfoScreen(vm : MainViewModel, film : Film, onBackClick : ()->Unit) {
                     titleContentColor = White,
                     navigationIconContentColor = White)
             )
-        }
+        },
     ) {  innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .padding(15.dp)
         ) {
             MoviePoster(film.image_url)
             Spacer(modifier = Modifier.height(16.dp))
@@ -81,7 +84,8 @@ fun MoviePoster(url : String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(250.dp),
+            .height(250.dp)
+            .padding(top = 15.dp),
         contentAlignment = Alignment.Center
     ) {
         AsyncImage(
@@ -106,7 +110,13 @@ fun MovieTitleAndInfo(film: Film) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = film.rating.toString(), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            val roundedRating = BigDecimal(film.rating).setScale(1, RoundingMode.HALF_UP)
+            Text(
+                text = roundedRating.toString(),
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = PrimaryColor
+            )
             Spacer(modifier = Modifier.width(8.dp))
             Text(text = "КиноПоиск", fontSize = 16.sp)
         }
