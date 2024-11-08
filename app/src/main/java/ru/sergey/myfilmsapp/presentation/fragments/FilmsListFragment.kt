@@ -56,7 +56,7 @@ class FilmsListFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.fragmentFilmInfoCompose.setContent @OptIn(ExperimentalLayoutApi::class) {
+        binding.fragmentFilmListCompose.setContent @OptIn(ExperimentalLayoutApi::class) {
             FilmListScreen(vm, ::onGenreClick, ::onFilmClick)
         }
     }
