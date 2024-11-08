@@ -20,12 +20,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ru.sergey.domain.model.Film
-import ru.sergey.myfilmsapp.R
+import ru.sergey.myfilmsapp.presentation.theme.ui.PrimaryColor
+import ru.sergey.myfilmsapp.presentation.theme.ui.White
 import ru.sergey.myfilmsapp.presentation.viewmodel.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,13 +42,13 @@ fun FilmListScreen(vm : MainViewModel,onGenreSelected : (String)->Unit, onFilmSe
                         Text(
                             text = "Фильмы",
                             modifier = Modifier.align(Alignment.Center),
-                            color = Color.White
+                            color = White
                         )
                     }
                 },
                 colors= TopAppBarDefaults.topAppBarColors(
-                    containerColor = colorResource(R.color.primaryColor),
-                    titleContentColor = Color.White),
+                    containerColor = PrimaryColor,
+                    titleContentColor = White),
             )
         }
     ) { innerPadding ->

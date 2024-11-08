@@ -1,9 +1,5 @@
 package ru.sergey.myfilmsapp.presentation.compose
 
-import androidx.compose.runtime.Composable
-import ru.sergey.domain.model.Film
-import ru.sergey.myfilmsapp.presentation.viewmodel.MainViewModel
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -23,22 +18,22 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.BitmapPainter
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ru.sergey.myfilmsapp.R
+import coil.compose.AsyncImage
+import ru.sergey.domain.model.Film
+import ru.sergey.myfilmsapp.presentation.theme.ui.PrimaryColor
+import ru.sergey.myfilmsapp.presentation.theme.ui.White
+import ru.sergey.myfilmsapp.presentation.viewmodel.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FilmInfoScreen(vm : MainViewModel, film : Film) {
+fun FilmInfoScreen(vm : MainViewModel, film : Film, onBackClick : ()->Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -49,19 +44,21 @@ fun FilmInfoScreen(vm : MainViewModel, film : Film) {
                         Text(
                             text = film.name,
                             modifier = Modifier.align(Alignment.Center),
-                            color = Color.White
+                            color = White
                         )
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = { /* Handle back navigation */ }) {
+                    IconButton(onClick = {
+                        onBackClick()
+                    }) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Назад")
                     }
                 },
                 colors= TopAppBarDefaults.topAppBarColors(
-                    containerColor = colorResource(R.color.primaryColor),
-                    titleContentColor = Color.White,
-                    navigationIconContentColor = Color.White)
+                    containerColor = PrimaryColor,
+                    titleContentColor = White,
+                    navigationIconContentColor = White)
             )
         }
     ) {  innerPadding ->
@@ -70,7 +67,7 @@ fun FilmInfoScreen(vm : MainViewModel, film : Film) {
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            MoviePoster()
+            MoviePoster(film.image_url)
             Spacer(modifier = Modifier.height(16.dp))
             MovieTitleAndInfo(film)
             Spacer(modifier = Modifier.height(16.dp))
@@ -80,13 +77,18 @@ fun FilmInfoScreen(vm : MainViewModel, film : Film) {
 }
 
 @Composable
-fun MoviePoster() {
+fun MoviePoster(url : String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(250.dp),
         contentAlignment = Alignment.Center
     ) {
+        AsyncImage(
+            model = url,
+            contentDescription = null, // Можно указать описание, если нужно для доступности
+            modifier = Modifier.fillMaxWidth() // или любые другие модификаторы
+        )
 //        Image(
 //            painter = BitmapPainter(image = R.id.),
 //            contentDescription = "Movie Poster",

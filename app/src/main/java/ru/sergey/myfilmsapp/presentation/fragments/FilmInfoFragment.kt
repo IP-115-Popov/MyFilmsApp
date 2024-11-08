@@ -6,11 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.fragment.app.Fragment
-import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.getActivityViewModel
+import ru.sergey.myfilmsapp.R
 import ru.sergey.myfilmsapp.databinding.FragmentFilmInfoBinding
 import ru.sergey.myfilmsapp.presentation.compose.FilmInfoScreen
-import ru.sergey.myfilmsapp.presentation.compose.FilmListScreen
 import ru.sergey.myfilmsapp.presentation.viewmodel.MainViewModel
 import ru.sergey.myfilmsapp.Сonstant
 
@@ -38,20 +37,16 @@ class FilmInfoFragment() : Fragment() {
         val filmId = arguments?.getLong(Сonstant.FILM_ID)
         val film = vm.films.value.find { it.id == filmId }
         binding.fragmentFilmInfoCompose.setContent @OptIn(ExperimentalLayoutApi::class) {
-            FilmInfoScreen(vm, film!!)
+            FilmInfoScreen(vm, film!!, ::onBackClick)
         }
-//        val vm: MainViewModel by activityViewModel<MainViewModel>()
-//        val filmId = arguments?.getLong(Сonstant.FILM_ID)
-//        val film = vm.films.value.find { it.id == filmId }
-//        if (film != null) {
-//        binding.apply {
-//            //moviePoster
-//            movieTitle.text = film.localized_name
-//            movieGenre.text = film.genres.toString()
-//            tvRating.text = film.rating.toString()
-//            movieDescription.text = film.description
-//
-//        }
-//            }
+    }
+    fun onBackClick() {
+        val secondFragment = FilmsListFragment()
+
+        parentFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_container,secondFragment)
+            .addToBackStack(null)
+            .commit()
     }
 }
