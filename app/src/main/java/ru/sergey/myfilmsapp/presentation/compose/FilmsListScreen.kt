@@ -193,7 +193,7 @@ fun FilmCard(film: Film, modifier: Modifier = Modifier, onFilmSelected: (Long) -
             Text(
                 text = film.localized_name,
                 fontFamily = FontFamily(Font(R.font.roboto_bold)),
-                fontSize = 18.sp,
+                fontSize = 16.sp,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.size(160.dp, 40.dp)
