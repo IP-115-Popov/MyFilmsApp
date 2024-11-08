@@ -2,12 +2,16 @@ package ru.sergey.myfilmsapp.presentation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.sergey.myfilmsapp.R
 import ru.sergey.myfilmsapp.databinding.ActivityMainBinding
 import ru.sergey.myfilmsapp.presentation.fragments.FilmsListFragment
 import ru.sergey.myfilmsapp.presentation.viewmodel.MainViewModel
+
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
@@ -22,10 +26,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         if (savedInstanceState == null) {
-            openFragment(FilmsListFragment(),R.id.fragment_container)
+            openFragment(FilmsListFragment(), R.id.fragment_container)
         }
     }
-    fun openFragment(fragment: Fragment, idHolder : Int) {
+
+    fun openFragment(fragment: Fragment, idHolder: Int) {
         supportFragmentManager
             .beginTransaction()
             .replace(idHolder, fragment)

@@ -5,6 +5,7 @@ import ru.sergey.domain.repository.FilmRepository
 
 class GetFilmsUseCase(val repository: FilmRepository) {
     suspend fun execute() : List<Film> {
-        return repository.getFilm()
+        val filmList =  repository.getFilm()
+        return filmList
     }
 }

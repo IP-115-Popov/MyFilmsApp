@@ -35,7 +35,7 @@ class FilmInfoFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val vm: MainViewModel by activityViewModel<MainViewModel>()
         val filmId = arguments?.getLong(Сonstant.FILM_ID)
-        val film = vm.items.value?.find { it.id == filmId }
+        val film = vm.films.value.find { it.id == filmId }
         if (film != null) {
         binding.apply {
             //moviePoster
