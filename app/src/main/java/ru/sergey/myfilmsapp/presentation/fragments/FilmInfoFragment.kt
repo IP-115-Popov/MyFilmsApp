@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.fragment.app.Fragment
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.getActivityViewModel
 import ru.sergey.myfilmsapp.databinding.FragmentFilmInfoBinding
+import ru.sergey.myfilmsapp.presentation.compose.FilmInfoScreen
+import ru.sergey.myfilmsapp.presentation.compose.FilmListScreen
 import ru.sergey.myfilmsapp.presentation.viewmodel.MainViewModel
 import ru.sergey.myfilmsapp.Сonstant
 
@@ -32,18 +35,23 @@ class FilmInfoFragment() : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val vm: MainViewModel by activityViewModel<MainViewModel>()
         val filmId = arguments?.getLong(Сonstant.FILM_ID)
         val film = vm.films.value.find { it.id == filmId }
-        if (film != null) {
-        binding.apply {
-            //moviePoster
-            movieTitle.text = film.localized_name
-            movieGenre.text = film.genres.toString()
-            tvRating.text = film.rating.toString()
-            movieDescription.text = film.description
-
+        binding.fragmentFilmInfoCompose.setContent @OptIn(ExperimentalLayoutApi::class) {
+            FilmInfoScreen(vm, film!!)
         }
-            }
+//        val vm: MainViewModel by activityViewModel<MainViewModel>()
+//        val filmId = arguments?.getLong(Сonstant.FILM_ID)
+//        val film = vm.films.value.find { it.id == filmId }
+//        if (film != null) {
+//        binding.apply {
+//            //moviePoster
+//            movieTitle.text = film.localized_name
+//            movieGenre.text = film.genres.toString()
+//            tvRating.text = film.rating.toString()
+//            movieDescription.text = film.description
+//
+//        }
+//            }
     }
 }
