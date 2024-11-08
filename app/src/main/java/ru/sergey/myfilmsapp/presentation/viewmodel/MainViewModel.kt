@@ -12,8 +12,8 @@ import ru.sergey.domain.model.Film
 import ru.sergey.domain.usecase.GetFilmsUseCase
 
 class MainViewModel(
-    private val getFilmsUseCase : GetFilmsUseCase
-): ViewModel() {
+    private val getFilmsUseCase: GetFilmsUseCase
+) : ViewModel() {
 
     private val _films = MutableStateFlow<List<Film>>(mutableListOf())
     val films: StateFlow<List<Film>> = _films.asStateFlow()
@@ -34,25 +34,27 @@ class MainViewModel(
     )
 
     init {
-        Log.i("myLog","MainViewModel Created")
+        Log.i("myLog", "MainViewModel Created")
         getFilms()
     }
-    fun getFilms(genresFilter : String? = null) {
+
+    fun getFilms(genresFilter: String? = null) {
         viewModelScope.launch(Dispatchers.IO) {
-            val items : List<Film>
+            val items: List<Film>
             if (genresFilter == null) {
-                 items = getFilmsUseCase.execute()
+                items = getFilmsUseCase.execute()
             } else {
                 val a = getFilmsUseCase.execute()
-                 items =  a.filter {
-                     it.genres.any{ g ->
-                         val genresFilterLow = genresFilter.toLowerCase()
-                         g == genresFilterLow
-                     } }
+                items = a.filter {
+                    it.genres.any { g ->
+                        val genresFilterLow = genresFilter.toLowerCase()
+                        g == genresFilterLow
+                    }
+                }
 
             }
-            Log.i("myLog", "Films is null"+(items == null).toString())
-            launch(Dispatchers.Main) { // Обновление UI в главном потоке
+            Log.i("myLog", "Films is null" + (items == null).toString())
+            launch(Dispatchers.Main) {
                 _films.value = items
             }
         }

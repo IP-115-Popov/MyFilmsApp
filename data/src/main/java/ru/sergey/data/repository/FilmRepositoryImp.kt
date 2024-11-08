@@ -11,7 +11,7 @@ import ru.sergey.domain.repository.FilmRepository
 
 class FilmRepositoryImp : FilmRepository {
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://s3-eu-west-1.amazonaws.com/sequeniatesttask/") // Укажите базовый URL
+        .baseUrl("https://s3-eu-west-1.amazonaws.com/sequeniatesttask/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
