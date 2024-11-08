@@ -16,7 +16,11 @@ class MainViewModel(
 ) : ViewModel() {
 
     private val _films = MutableStateFlow<List<Film>>(mutableListOf())
-    val films: StateFlow<List<Film>> = _films.asStateFlow()
+    val films: StateFlow<List<Film>>
+        get() {
+            _films.value = _films.value.sortedBy { it.localized_name }
+            return _films.asStateFlow()
+        }
 
     val genres = listOf(
         "Биография",
