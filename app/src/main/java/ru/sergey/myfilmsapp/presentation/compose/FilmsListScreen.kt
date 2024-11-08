@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +20,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -31,6 +31,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -38,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import ru.sergey.domain.model.Film
 import ru.sergey.myfilmsapp.R
+import ru.sergey.myfilmsapp.presentation.theme.ui.BackgroundColor
 import ru.sergey.myfilmsapp.presentation.theme.ui.DialogBackground
 import ru.sergey.myfilmsapp.presentation.theme.ui.PrimaryColor
 import ru.sergey.myfilmsapp.presentation.theme.ui.SelectedGenreBackground
@@ -59,8 +63,10 @@ fun FilmListScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Фильмы",
-                        color = White
+                        text = stringResource(R.string.Films),
+                        color = White,
+                        fontSize = 18.sp,
+                        fontFamily = FontFamily(Font(R.font.roboto_bold))
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -70,7 +76,12 @@ fun FilmListScreen(
             )
         },
     ) { innerPadding ->
-        Box(modifier = Modifier.fillMaxSize().background(White))
+        val startPadding = PaddingValues(start = 12.dp)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(White)
+        )
         if (films.value.size == 0) {
             ErrorDialog(
                 onRetry = {
@@ -82,23 +93,26 @@ fun FilmListScreen(
                 contentPadding = innerPadding,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(12.dp)
             ) {
                 item {
                     Box(
                         modifier = Modifier.size(360.dp, 40.dp)
                     ) {
                         Text(
-                            text = "Жанры",
+                            text = stringResource(R.string.Genres),
                             fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp,
-                            modifier = Modifier.align(Alignment.CenterStart)
+                            fontSize = 16.sp,
+                            fontFamily = FontFamily(Font(R.font.roboto_bold)),
+                            modifier = Modifier
+                                .align(Alignment.CenterStart)
+                                .padding(startPadding)
                         )
                     }
                 }
                 items(genres) { genre ->
                     GenreItem(
                         genre,
+                        modifier = Modifier.padding(startPadding),
                         onGenreSelected,
                         selectedGenre,
                         { genre ->
@@ -110,15 +124,21 @@ fun FilmListScreen(
                         modifier = Modifier.size(360.dp, 40.dp)
                     ) {
                         Text(
-                            text = "Фильмы",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp,
-                            modifier = Modifier.align(Alignment.CenterStart)
+                            text = stringResource(R.string.Films),
+                            fontSize = 16.sp,
+                            fontFamily = FontFamily(Font(R.font.roboto_bold)),
+                            modifier = Modifier
+                                .align(Alignment.CenterStart)
+                                .padding(startPadding)
                         )
                     }
                 }
                 items(films.value.chunked(2)) { row ->
-                    Row(modifier = Modifier.fillMaxWidth()) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(startPadding)
+                    ) {
                         if (row.getOrNull(0) != null) FilmCard(
                             row[0],
                             Modifier.fillMaxWidth(0.5f),
@@ -139,24 +159,29 @@ fun FilmListScreen(
 @Composable
 fun GenreItem(
     genre: String,
+    modifier: Modifier,
     onGenreSelected: (String) -> Unit,
     selectedGenre: MutableState<String?>,
     onClick: (String) -> Unit
 ) {
+    val defaultModifier = Modifier
+        .fillMaxWidth()
+        .height(40.dp)
+        .background(if (selectedGenre.value == genre) SelectedGenreBackground else BackgroundColor)
+        .clickable {
+            onGenreSelected(genre)
+            onClick(genre)
+        }
     Box(
-        modifier = Modifier
-            .size(360.dp, 40.dp)
-            .background(if (selectedGenre.value == genre) SelectedGenreBackground else White)
-            .clickable {
-                onGenreSelected(genre)
-                onClick(genre)
-            }
+        modifier = defaultModifier.then(modifier)
 
     ) {
         Text(
             text = genre,
             modifier = Modifier
-                .align(Alignment.CenterStart)
+                .align(Alignment.CenterStart),
+            fontSize = 16.sp,
+            fontFamily = FontFamily(Font(R.font.roboto_regular))
         )
     }
 }
@@ -170,23 +195,23 @@ fun FilmCard(film: Film, modifier: Modifier = Modifier, onFilmSelected: (Long) -
             onFilmSelected(film.id)
         }
     ) {
-        Column {
+        Column(Modifier.background(BackgroundColor)) {
             AsyncImage(
                 model = film.image_url,
                 contentDescription = null,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(5.dp)),
+                    .size(160.dp, 222.dp)
+                    .clip(RoundedCornerShape(4.dp)),
                 contentScale = ContentScale.Crop,
                 error = painterResource(id = defaultImage)
             )
             Text(
                 text = film.localized_name,
-                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily(Font(R.font.roboto_bold)),
                 fontSize = 18.sp,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.height(40.dp)
+                modifier = Modifier.size(160.dp, 40.dp)
             )
         }
     }
@@ -208,13 +233,17 @@ fun ErrorDialog(onRetry: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Ошибка подключения сети",
+                text = stringResource(R.string.NetworkConnectionError),
                 color = White,
-                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily(Font(R.font.roboto_regular))
             )
-            Text("ПОВТОРИТЬ", color = SelectedGenreBackground, modifier = Modifier.clickable {
-                onRetry()
-            })
+            Text(
+                text = stringResource(R.string.Repeat),
+                fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                color = SelectedGenreBackground,
+                modifier = Modifier.clickable {
+                    onRetry()
+                })
         }
     }
 }

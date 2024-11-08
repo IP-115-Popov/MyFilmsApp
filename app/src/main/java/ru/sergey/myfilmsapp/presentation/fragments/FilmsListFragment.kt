@@ -51,7 +51,8 @@ class FilmsListFragment : Fragment() {
             .addToBackStack(null)
             .commit()
     }
-    fun onGenreClick(genre : String) {
+
+    fun onGenreClick(genre: String) {
         vm.getFilms(genre)
     }
 

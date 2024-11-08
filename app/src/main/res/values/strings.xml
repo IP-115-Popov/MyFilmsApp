@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">MyFilmsApp</string>
+    <string name="Back">Назад</string>
+    <string name="year">" год"</string>
+    <string name="NetworkConnectionError">Ошибка подключения сети</string>
+    <string name="Repeat">ПОВТОРИТЬ</string>
+    <string name="Films">Фильмы</string>
+    <string name="Genres">Жанры</string>
 </resources>

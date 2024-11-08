@@ -9,10 +9,10 @@ import ru.sergey.myfilmsapp.di.appModule
 import ru.sergey.myfilmsapp.di.dataModule
 import ru.sergey.myfilmsapp.di.domainModule
 
-class App : Application(){
+class App : Application() {
     override fun onCreate() {
         super.onCreate()
-        startKoin{
+        startKoin {
             androidLogger(Level.DEBUG)
             androidContext(this@App)
             modules(listOf(appModule, domainModule, dataModule))

@@ -16,7 +16,8 @@ import ru.sergey.myfilmsapp.Сonstant
 class FilmInfoFragment() : Fragment() {
     private var _binding: FragmentFilmInfoBinding? = null
     private val binding: FragmentFilmInfoBinding
-        get() = _binding ?: throw IllegalStateException("Binding for FragmentFilmInfo must not be null")
+        get() = _binding
+            ?: throw IllegalStateException("Binding for FragmentFilmInfo must not be null")
 
     private lateinit var vm: MainViewModel
 
@@ -24,6 +25,7 @@ class FilmInfoFragment() : Fragment() {
         super.onCreate(savedInstanceState)
         vm = getActivityViewModel()
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,15 +39,16 @@ class FilmInfoFragment() : Fragment() {
         val filmId = arguments?.getLong(Сonstant.FILM_ID)
         val film = vm.films.value.find { it.id == filmId }
         binding.fragmentFilmInfoCompose.setContent @OptIn(ExperimentalLayoutApi::class) {
-            FilmInfoScreen(vm, film!!, ::onBackClick)
+            FilmInfoScreen(film!!, ::onBackClick)
         }
     }
+
     fun onBackClick() {
         val secondFragment = FilmsListFragment()
 
         parentFragmentManager
             .beginTransaction()
-            .replace(R.id.fragment_container,secondFragment)
+            .replace(R.id.fragment_container, secondFragment)
             .addToBackStack(null)
             .commit()
     }

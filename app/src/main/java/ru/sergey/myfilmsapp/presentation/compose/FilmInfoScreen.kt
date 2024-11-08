@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -21,7 +20,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,7 +27,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -39,13 +39,12 @@ import ru.sergey.domain.model.Film
 import ru.sergey.myfilmsapp.R
 import ru.sergey.myfilmsapp.presentation.theme.ui.PrimaryColor
 import ru.sergey.myfilmsapp.presentation.theme.ui.White
-import ru.sergey.myfilmsapp.presentation.viewmodel.MainViewModel
 import java.math.BigDecimal
 import java.math.RoundingMode
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FilmInfoScreen(vm : MainViewModel, film : Film, onBackClick : ()->Unit) {
+fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -53,25 +52,35 @@ fun FilmInfoScreen(vm : MainViewModel, film : Film, onBackClick : ()->Unit) {
                     Text(
                         text = film.name,
                         color = White,
-                        maxLines = 1,  // Обрезать по одной строке
-                        overflow = TextOverflow.Ellipsis
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        fontSize = 18.sp,
+                        fontFamily = FontFamily(Font(R.font.roboto_bold))
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = {
                         onBackClick()
                     }) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Назад")
+                        Icon(
+                            Icons.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.Back)
+                        )
                     }
                 },
-                colors= TopAppBarDefaults.topAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = PrimaryColor,
                     titleContentColor = White,
-                    navigationIconContentColor = White)
+                    navigationIconContentColor = White
+                )
             )
         },
-    ) {  innerPadding ->
-        Box(modifier = Modifier.fillMaxSize().background(White))
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(White)
+        )
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -88,7 +97,7 @@ fun FilmInfoScreen(vm : MainViewModel, film : Film, onBackClick : ()->Unit) {
 }
 
 @Composable
-fun MoviePoster(url : String) {
+fun MoviePoster(url: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -103,7 +112,7 @@ fun MoviePoster(url : String) {
                 .size(132.dp, 201.dp)
                 .clip(RoundedCornerShape(4.dp))
                 .background(White),
-                    contentScale = ContentScale.Crop,
+            contentScale = ContentScale.Crop,
             error = painterResource(id = R.drawable.img_not_find)
         )
     }
@@ -114,11 +123,15 @@ fun MovieTitleAndInfo(film: Film) {
     Column {
         Text(
             text = film.localized_name,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
+            fontSize = 26.sp,
+            fontFamily = FontFamily(Font(R.font.roboto_bold))
         )
         Spacer(modifier = Modifier.height(8.dp))
-        Text(text = film.genres.joinToString(", ") + ", " + film.year + " год", fontSize = 16.sp)
+        Text(
+            text = film.genres.joinToString(", ") + ", " + film.year + stringResource(R.string.year),
+            fontSize = 16.sp,
+            fontFamily = FontFamily(Font(R.font.roboto_regular))
+        )
         Spacer(modifier = Modifier.height(8.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -126,20 +139,25 @@ fun MovieTitleAndInfo(film: Film) {
             val roundedRating = BigDecimal(film.rating).setScale(1, RoundingMode.HALF_UP)
             Text(
                 text = roundedRating.toString(),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
+                fontSize = 24.sp,
+                fontFamily = FontFamily(Font(R.font.roboto_bold)),
                 color = PrimaryColor
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "КиноПоиск", fontSize = 16.sp)
+            Text(
+                text = "КиноПоиск",
+                fontSize = 16.sp,
+                fontFamily = FontFamily(Font(R.font.roboto_regular))
+            )
         }
     }
 }
 
 @Composable
-fun MovieSynopsis(film : Film) {
+fun MovieSynopsis(film: Film) {
     Text(
         text = film.description,
-        textAlign = TextAlign.Justify
+        textAlign = TextAlign.Justify,
+        fontFamily = FontFamily(Font(R.font.roboto_regular))
     )
 }

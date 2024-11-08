@@ -1,6 +1,8 @@
 package ru.sergey.myfilmsapp.presentation
 
+import android.os.Build
 import android.os.Bundle
+import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -8,8 +10,6 @@ import ru.sergey.myfilmsapp.R
 import ru.sergey.myfilmsapp.databinding.ActivityMainBinding
 import ru.sergey.myfilmsapp.presentation.fragments.FilmsListFragment
 import ru.sergey.myfilmsapp.presentation.viewmodel.MainViewModel
-import android.os.Build
-import android.view.Window
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null

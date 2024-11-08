@@ -5,7 +5,7 @@ import org.koin.dsl.module
 import ru.sergey.myfilmsapp.presentation.viewmodel.MainViewModel
 
 val appModule = module {
-    viewModel<MainViewModel>{
+    viewModel<MainViewModel> {
         MainViewModel(
             getFilmsUseCase = get(),
         )
