@@ -70,6 +70,7 @@ fun FilmListScreen(
             )
         },
     ) { innerPadding ->
+        Box(modifier = Modifier.fillMaxSize().background(White))
         if (films.value.size == 0) {
             ErrorDialog(
                 onRetry = {

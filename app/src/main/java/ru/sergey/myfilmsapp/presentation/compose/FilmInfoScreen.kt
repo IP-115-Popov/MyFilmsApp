@@ -1,5 +1,6 @@
 package ru.sergey.myfilmsapp.presentation.compose
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,8 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -23,6 +26,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -30,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import ru.sergey.domain.model.Film
+import ru.sergey.myfilmsapp.R
 import ru.sergey.myfilmsapp.presentation.theme.ui.PrimaryColor
 import ru.sergey.myfilmsapp.presentation.theme.ui.White
 import ru.sergey.myfilmsapp.presentation.viewmodel.MainViewModel
@@ -64,6 +71,7 @@ fun FilmInfoScreen(vm : MainViewModel, film : Film, onBackClick : ()->Unit) {
             )
         },
     ) {  innerPadding ->
+        Box(modifier = Modifier.fillMaxSize().background(White))
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -91,7 +99,12 @@ fun MoviePoster(url : String) {
         AsyncImage(
             model = url,
             contentDescription = null,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .size(132.dp, 201.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .background(White),
+                    contentScale = ContentScale.Crop,
+            error = painterResource(id = R.drawable.img_not_find)
         )
     }
 }
