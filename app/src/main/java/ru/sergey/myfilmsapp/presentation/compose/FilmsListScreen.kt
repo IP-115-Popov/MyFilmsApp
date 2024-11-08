@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -55,17 +56,12 @@ fun FilmListScreen(
     var selectedGenre = remember { mutableStateOf<String?>(null) }
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
-                    Box(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "Фильмы",
-                            modifier = Modifier.align(Alignment.Center),
-                            color = White
-                        )
-                    }
+                    Text(
+                        text = "Фильмы",
+                        color = White
+                    )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = PrimaryColor,
