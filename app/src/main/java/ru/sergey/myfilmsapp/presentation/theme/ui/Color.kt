@@ -17,6 +17,7 @@ val White = hexToColor("#FFFFFFFF")
 val PrimaryColorDark = hexToColor("#00574B")
 val ColorAccent = hexToColor("#D81B60")
 val SelectedGenreBackground = hexToColor("#FFC967")
+val DialogBackground = hexToColor("#232323")
 
 fun hexToColor(hex: String): Color {
     return Color(android.graphics.Color.parseColor(hex))
