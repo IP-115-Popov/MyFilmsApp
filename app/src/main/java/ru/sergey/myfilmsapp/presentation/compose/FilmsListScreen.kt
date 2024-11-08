@@ -26,6 +26,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,7 +56,7 @@ fun FilmListScreen(
 ) {
     val genres = remember { vm.genres }
     val films = vm.films.collectAsState()
-    val selectedGenre = remember { mutableStateOf<String?>(null) }
+    val selectedGenre = rememberSaveable { mutableStateOf<String?>(null) }
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(

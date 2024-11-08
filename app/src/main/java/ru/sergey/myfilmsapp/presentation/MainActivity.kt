@@ -1,6 +1,5 @@
 package ru.sergey.myfilmsapp.presentation
 
-import android.os.Build
 import android.os.Bundle
 import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
