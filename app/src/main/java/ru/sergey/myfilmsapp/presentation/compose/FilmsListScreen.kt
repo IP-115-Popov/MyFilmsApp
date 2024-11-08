@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import ru.sergey.domain.model.Film
 import ru.sergey.myfilmsapp.presentation.theme.ui.PrimaryColor
 import ru.sergey.myfilmsapp.presentation.theme.ui.White
@@ -103,7 +104,11 @@ fun FilmCard(film: Film, modifier: Modifier = Modifier, onFilmSelected : (Long)-
         }
     ) {
         Column {
-            //Image(painter = rememberImagePainter(movie.poster), contentDescription = null)
+            AsyncImage(
+                model = film.image_url,
+                contentDescription = null,
+                modifier = Modifier.fillMaxWidth()
+            )
             Text(film.localized_name)
 
         }

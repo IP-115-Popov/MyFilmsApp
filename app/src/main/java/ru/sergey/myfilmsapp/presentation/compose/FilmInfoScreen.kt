@@ -86,14 +86,9 @@ fun MoviePoster(url : String) {
     ) {
         AsyncImage(
             model = url,
-            contentDescription = null, // Можно указать описание, если нужно для доступности
-            modifier = Modifier.fillMaxWidth() // или любые другие модификаторы
+            contentDescription = null,
+            modifier = Modifier.fillMaxWidth()
         )
-//        Image(
-//            painter = BitmapPainter(image = R.id.),
-//            contentDescription = "Movie Poster",
-//            modifier = Modifier.fillMaxSize()
-//        )
     }
 }
 
