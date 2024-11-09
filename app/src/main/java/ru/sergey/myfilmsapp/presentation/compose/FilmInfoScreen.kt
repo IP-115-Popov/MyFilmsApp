@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -56,14 +57,16 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
                         modifier = Modifier.fillMaxHeight(),
                     ) {
                         Text(
-                            text = film.name,
+                            text = if (film.name == null || film.name == "") stringResource(R.string.default_film_name) else film.name,
                             color = White,
                             fontSize = 18.sp,
                             fontFamily = FontFamily(Font(R.font.roboto_regular)),
                             modifier = Modifier.align(Alignment.Center),
                             fontWeight = FontWeight(500),
                             letterSpacing = 0.15.sp,
-                            lineHeight = 22.sp
+                            lineHeight = 22.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
                         )
                     }
                 },
@@ -97,11 +100,17 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
                 .padding(innerPadding)
                 .padding(start = 16.dp, end = 16.dp)
         ) {
+            // Отображаем постер фильма с проверкой на пустой URL
             MoviePoster(film.image_url, modifier = Modifier.padding(top = 24.dp))
 
             Text(
-                modifier = Modifier.padding(top = 24.dp).fillMaxWidth().height(32.dp),
-                text = film.localized_name,
+                modifier = Modifier
+                    .padding(top = 24.dp)
+                    .fillMaxWidth()
+                    .height(32.dp),
+                text = if (film.localized_name == null || film.localized_name == "")
+                            stringResource(R.string.default_localized_name)
+                       else film.localized_name,
                 fontSize = 26.sp,
                 fontWeight = FontWeight(700),
                 fontFamily = FontFamily(Font(R.font.roboto_bold)),
@@ -109,9 +118,15 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
                 lineHeight = 32.sp,
                 color = MyBlack
             )
+
             Text(
-                modifier = Modifier.padding(top = 8.dp).fillMaxWidth().height(20.dp),
-                text = film.genres.joinToString(", ") + ", " + film.year + stringResource(R.string.year),
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth()
+                    .height(20.dp),
+                text = (film.genres.takeIf { it.isNotEmpty() }?.joinToString(", ") ?: "")
+
+                        + ", " + (film.year.takeIf { it > 0 }?.toString() ?: "???") + stringResource(R.string.year),
                 fontSize = 16.sp,
                 fontWeight = FontWeight(400),
                 fontFamily = FontFamily(Font(R.font.roboto_regular)),
@@ -119,13 +134,19 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
                 color = GreyFont,
                 lineHeight = 20.sp
             )
+
             Row(
-                modifier = Modifier.padding(top = 10.dp).fillMaxWidth().height(28.dp),
+                modifier = Modifier
+                    .padding(top = 10.dp)
+                    .fillMaxWidth()
+                    .height(28.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                val roundedRating = BigDecimal(film.rating).setScale(1, RoundingMode.HALF_UP)
+
+                val roundedRating = BigDecimal( film.rating ).setScale(1, RoundingMode.HALF_UP)
+
                 Text(
-                    text = roundedRating.toString(),
+                    text = roundedRating.takeIf { it > BigDecimal.ZERO }?.toString() ?: "???", // Проверка на пустой рейтинг
                     fontSize = 24.sp,
                     fontFamily = FontFamily(Font(R.font.roboto_bold)),
                     fontWeight = FontWeight(700),
@@ -147,7 +168,7 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
 
             Text(
                 modifier = Modifier.padding(top = 14.dp),
-                text = film.description,
+                text = if (film.description == null) "" else film.description,
                 fontWeight = FontWeight(400),
                 textAlign = TextAlign.Justify,
                 fontFamily = FontFamily(Font(R.font.roboto_regular)),
@@ -167,14 +188,15 @@ fun MoviePoster(url: String, modifier: Modifier) {
         contentAlignment = Alignment.Center
     ) {
         AsyncImage(
-            model = url,
+            model = if (url.isNotEmpty()) url else R.drawable.img_not_find, // Использование заглушки на случай пустого URL
             contentDescription = null,
             modifier = Modifier
                 .size(132.dp, 201.dp)
                 .clip(RoundedCornerShape(4.dp))
                 .background(White),
             contentScale = ContentScale.Crop,
-            error = painterResource(id = R.drawable.img_not_find)
+            error = painterResource(id = R.drawable.img_not_find),
+            placeholder = painterResource(id = R.drawable.img_not_find)
         )
     }
 }

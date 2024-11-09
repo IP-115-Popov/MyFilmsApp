@@ -246,7 +246,8 @@ fun FilmCard(film: Film, modifier: Modifier = Modifier, onFilmSelected: (Long) -
                     .height(260.dp)
                     .clip(RoundedCornerShape(4.dp)),
                 contentScale = ContentScale.Crop,
-                error = painterResource(id = defaultImage)
+                error = painterResource(id = defaultImage),
+                placeholder = painterResource(id = defaultImage)
             )
             Text(
                 text = film.localized_name,

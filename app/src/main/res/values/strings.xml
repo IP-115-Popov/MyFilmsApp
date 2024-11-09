@@ -6,4 +6,7 @@
     <string name="Repeat">ПОВТОРИТЬ</string>
     <string name="Films">Фильмы</string>
     <string name="Genres">Жанры</string>
+
+    <string name="default_film_name">Имя Отсутствует</string>
+    <string name="default_localized_name">Имя Отсутствует</string>
 </resources>
