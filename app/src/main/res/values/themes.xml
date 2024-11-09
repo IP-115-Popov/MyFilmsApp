@@ -1,16 +1,9 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Base.Theme.MyFilmsApp" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.MyFilmsApp" parent="Theme.Material3.Light.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
     <style name="Theme.MyFilmsApp" parent="Base.Theme.MyFilmsApp" />
-
-
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/primaryColor</item>
-        <item name="colorPrimaryDark">@color/primaryColorDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
 </resources>

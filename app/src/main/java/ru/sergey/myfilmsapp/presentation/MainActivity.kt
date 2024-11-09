@@ -3,6 +3,7 @@ package ru.sergey.myfilmsapp.presentation
 import android.os.Bundle
 import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.sergey.myfilmsapp.R
@@ -19,6 +20,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

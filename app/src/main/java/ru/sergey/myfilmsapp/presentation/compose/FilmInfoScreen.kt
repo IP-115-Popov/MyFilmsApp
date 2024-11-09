@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import ru.sergey.domain.model.Film
 import ru.sergey.myfilmsapp.R
+import ru.sergey.myfilmsapp.presentation.theme.ui.MyBlack
 import ru.sergey.myfilmsapp.presentation.theme.ui.GreyFont
 import ru.sergey.myfilmsapp.presentation.theme.ui.PrimaryColor
 import ru.sergey.myfilmsapp.presentation.theme.ui.White
@@ -105,7 +106,8 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
                 fontWeight = FontWeight(700),
                 fontFamily = FontFamily(Font(R.font.roboto_bold)),
                 letterSpacing = 0.1.sp,
-                lineHeight = 32.sp
+                lineHeight = 32.sp,
+                color = MyBlack
             )
             Text(
                 modifier = Modifier.padding(top = 8.dp).fillMaxWidth().height(20.dp),
@@ -150,7 +152,8 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
                 textAlign = TextAlign.Justify,
                 fontFamily = FontFamily(Font(R.font.roboto_regular)),
                 letterSpacing = 0.1.sp,
-                lineHeight = 20.sp
+                lineHeight = 20.sp,
+                color = MyBlack
             )
         }
     }

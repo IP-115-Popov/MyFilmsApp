@@ -45,6 +45,7 @@ import coil.compose.AsyncImage
 import ru.sergey.domain.model.Film
 import ru.sergey.myfilmsapp.R
 import ru.sergey.myfilmsapp.presentation.theme.ui.BackgroundColor
+import ru.sergey.myfilmsapp.presentation.theme.ui.MyBlack
 import ru.sergey.myfilmsapp.presentation.theme.ui.DialogBackground
 import ru.sergey.myfilmsapp.presentation.theme.ui.PrimaryColor
 import ru.sergey.myfilmsapp.presentation.theme.ui.SelectedGenreBackground
@@ -130,7 +131,8 @@ fun FilmListScreen(
                             modifier = Modifier
                                 .align(Alignment.CenterStart)
                                 .padding(startPadding),
-                            lineHeight = 22.sp
+                            lineHeight = 22.sp,
+                            color = MyBlack
 
                         )
                     }
@@ -161,7 +163,8 @@ fun FilmListScreen(
                             lineHeight = 22.sp,
                             modifier = Modifier
                                 .align(Alignment.CenterStart)
-                                .padding(startPadding)
+                                .padding(startPadding),
+                            color = MyBlack
                         )
                     }
                 }
@@ -221,7 +224,8 @@ fun GenreItem(
             fontFamily = FontFamily(Font(R.font.roboto_regular)),
             fontWeight = FontWeight(400),
             letterSpacing = 0.1.sp,
-            lineHeight = 20.sp
+            lineHeight = 20.sp,
+            color = MyBlack
         )
     }
 }
@@ -253,6 +257,7 @@ fun FilmCard(film: Film, modifier: Modifier = Modifier, onFilmSelected: (Long) -
                 modifier = Modifier.size(160.dp, 48.dp).padding(top = 8.dp),
                 fontWeight = FontWeight(700),
                 letterSpacing = 0.1.sp,
+                color = MyBlack
             )
         }
     }
