@@ -1,10 +1,12 @@
 package ru.sergey.myfilmsapp.presentation.compose
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,11 +27,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -49,14 +53,19 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(
-                        text = film.name,
-                        color = White,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        fontSize = 18.sp,
-                        fontFamily = FontFamily(Font(R.font.roboto_bold))
-                    )
+                    Box(
+                        modifier = Modifier.fillMaxHeight(),
+                    ) {
+                        Text(
+                            text = film.name,
+                            color = White,
+                            fontSize = 18.sp,
+                            fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                            modifier = Modifier.align(Alignment.Center),
+                            fontWeight = FontWeight(500),
+                            letterSpacing = 0.15.sp
+                        )
+                    }
                 },
                 navigationIcon = {
                     IconButton(onClick = {
@@ -72,7 +81,8 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
                     containerColor = PrimaryColor,
                     titleContentColor = White,
                     navigationIconContentColor = White
-                )
+                ),
+                modifier = Modifier.height(56.dp)
             )
         },
     ) { innerPadding ->
@@ -85,24 +95,67 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(15.dp)
+                .padding(start = 16.dp, end = 16.dp)
         ) {
-            MoviePoster(film.image_url)
-            Spacer(modifier = Modifier.height(16.dp))
-            MovieTitleAndInfo(film)
-            Spacer(modifier = Modifier.height(16.dp))
-            MovieSynopsis(film)
+            MoviePoster(film.image_url, modifier = Modifier.padding(top = 24.dp))
+
+            Text(
+                modifier = Modifier.padding(top = 24.dp).fillMaxWidth().height(32.dp),
+                text = film.localized_name,
+                fontSize = 26.sp,
+                fontWeight = FontWeight(700),
+                fontFamily = FontFamily(Font(R.font.roboto_bold)),
+                letterSpacing = 0.1.sp
+            )
+            Text(
+                modifier = Modifier.padding(top = 8.dp).fillMaxWidth().height(20.dp),
+                text = film.genres.joinToString(", ") + ", " + film.year + stringResource(R.string.year),
+                fontSize = 16.sp,
+                fontWeight = FontWeight(400),
+                fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                letterSpacing = 0.1.sp
+            )
+            Row(
+                modifier = Modifier.padding(top = 10.dp).fillMaxWidth().height(28.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                val roundedRating = BigDecimal(film.rating).setScale(1, RoundingMode.HALF_UP)
+                Text(
+                    text = roundedRating.toString(),
+                    fontSize = 24.sp,
+                    fontFamily = FontFamily(Font(R.font.roboto_bold)),
+                    fontWeight = FontWeight(700),
+                    color = PrimaryColor,
+                    letterSpacing = 0.1.sp
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "КиноПоиск",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight(500),
+                    fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                    color = PrimaryColor,
+                    letterSpacing = 0.1.sp
+                )
+            }
+
+            Text(
+                modifier = Modifier.padding(top = 14.dp),
+                text = film.description,
+                fontWeight = FontWeight(400),
+                textAlign = TextAlign.Justify,
+                fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                letterSpacing = 0.1.sp
+            )
         }
     }
 }
 
 @Composable
-fun MoviePoster(url: String) {
+fun MoviePoster(url: String, modifier: Modifier) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(250.dp)
-            .padding(top = 15.dp),
+        modifier = modifier
+            .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
         AsyncImage(
@@ -116,48 +169,4 @@ fun MoviePoster(url: String) {
             error = painterResource(id = R.drawable.img_not_find)
         )
     }
-}
-
-@Composable
-fun MovieTitleAndInfo(film: Film) {
-    Column {
-        Text(
-            text = film.localized_name,
-            fontSize = 26.sp,
-            fontFamily = FontFamily(Font(R.font.roboto_bold))
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = film.genres.joinToString(", ") + ", " + film.year + stringResource(R.string.year),
-            fontSize = 16.sp,
-            fontFamily = FontFamily(Font(R.font.roboto_regular))
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            val roundedRating = BigDecimal(film.rating).setScale(1, RoundingMode.HALF_UP)
-            Text(
-                text = roundedRating.toString(),
-                fontSize = 24.sp,
-                fontFamily = FontFamily(Font(R.font.roboto_bold)),
-                color = PrimaryColor
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "КиноПоиск",
-                fontSize = 16.sp,
-                fontFamily = FontFamily(Font(R.font.roboto_regular))
-            )
-        }
-    }
-}
-
-@Composable
-fun MovieSynopsis(film: Film) {
-    Text(
-        text = film.description,
-        textAlign = TextAlign.Justify,
-        fontFamily = FontFamily(Font(R.font.roboto_regular))
-    )
 }

@@ -2,12 +2,14 @@ package ru.sergey.myfilmsapp.presentation.compose
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -32,17 +34,24 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import coil.compose.AsyncImage
+import ru.sergey.data.model.FilmResponse
+import ru.sergey.data.repository.FilmRepositoryImp
 import ru.sergey.domain.model.Film
+import ru.sergey.domain.usecase.GetFilmsUseCase
 import ru.sergey.myfilmsapp.R
 import ru.sergey.myfilmsapp.presentation.theme.ui.BackgroundColor
 import ru.sergey.myfilmsapp.presentation.theme.ui.DialogBackground
@@ -68,26 +77,35 @@ fun FilmListScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(
-                        text = stringResource(R.string.Films),
-                        color = White,
-                        fontSize = 18.sp,
-                        fontFamily = FontFamily(Font(R.font.roboto_bold))
-                    )
+                    Box(
+                        modifier = Modifier.fillMaxHeight(),
+                    ) {
+                        Text(
+                            text = stringResource(R.string.Films),
+                            color = White,
+                            fontSize = 18.sp,
+                            fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                            modifier = Modifier.align(Alignment.Center),
+                            fontWeight = FontWeight(500),
+                            letterSpacing = 0.15.sp
+                        )
+                    }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = PrimaryColor, titleContentColor = White
                 ),
+                modifier = Modifier.height(56.dp)
             )
         },
     ) { innerPadding ->
-        val startPadding = PaddingValues(start = 12.dp)
+        val startPadding = PaddingValues(start = 16.dp)
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(White)
         )
         if (isLoading == true && isLoadingFailed == false) {
+            //Загрузка
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -99,6 +117,7 @@ fun FilmListScreen(
                 )
             }
         } else if (isLoadingFailed == true) {
+            //Ошибка
             ErrorDialog(onRetry = {
                 vm.getFilms()
             })
@@ -108,16 +127,18 @@ fun FilmListScreen(
             ) {
                 item {
                     Box(
-                        modifier = Modifier.size(360.dp, 40.dp)
+                        modifier = Modifier.padding(top = 8.dp).height(40.dp).fillMaxWidth()
                     ) {
                         Text(
                             text = stringResource(R.string.Genres),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight(700),
+                            letterSpacing = 0.1.sp,
                             fontFamily = FontFamily(Font(R.font.roboto_bold)),
                             modifier = Modifier
                                 .align(Alignment.CenterStart)
                                 .padding(startPadding)
+
                         )
                     }
                 }
@@ -136,11 +157,13 @@ fun FilmListScreen(
                 }
                 item {
                     Box(
-                        modifier = Modifier.size(360.dp, 40.dp)
+                        modifier = Modifier.padding(top = 16.dp).height(40.dp).fillMaxWidth()
                     ) {
                         Text(
                             text = stringResource(R.string.Films),
-                            fontSize = 16.sp,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight(700),
+                            letterSpacing = 0.1.sp,
                             fontFamily = FontFamily(Font(R.font.roboto_bold)),
                             modifier = Modifier
                                 .align(Alignment.CenterStart)
@@ -153,12 +176,20 @@ fun FilmListScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(startPadding)
+                            .padding(top = 8.dp, bottom =  8.dp, end = 16.dp),
+                        horizontalArrangement = Arrangement.Absolute.SpaceBetween
                     ) {
                         if (row.getOrNull(0) != null) FilmCard(
-                            row[0], Modifier.fillMaxWidth(0.5f), onFilmSelected
+                            row[0],
+                            Modifier.fillMaxWidth(0.5f)
+                                .padding( end = 4.dp),
+                            onFilmSelected
                         )
                         if (row.getOrNull(1) != null) FilmCard(
-                            row[1], Modifier.fillMaxWidth(), onFilmSelected
+                            row[1],
+                            Modifier.fillMaxWidth()
+                                .padding(start = 4.dp),
+                            onFilmSelected
                         )
                     }
                 }
@@ -193,7 +224,9 @@ fun GenreItem(
             text = genre,
             modifier = Modifier.align(Alignment.CenterStart),
             fontSize = 16.sp,
-            fontFamily = FontFamily(Font(R.font.roboto_regular))
+            fontFamily = FontFamily(Font(R.font.roboto_regular)),
+            fontWeight = FontWeight(400),
+            letterSpacing = 0.1.sp,
         )
     }
 }
@@ -202,7 +235,6 @@ fun GenreItem(
 fun FilmCard(film: Film, modifier: Modifier = Modifier, onFilmSelected: (Long) -> Unit) {
     val defaultImage = R.drawable.img_not_find
     Surface(modifier = modifier
-        .padding(5.dp)
         .clickable {
             onFilmSelected(film.id)
         }) {
@@ -211,7 +243,8 @@ fun FilmCard(film: Film, modifier: Modifier = Modifier, onFilmSelected: (Long) -
                 model = film.image_url,
                 contentDescription = null,
                 modifier = Modifier
-                    .size(160.dp, 222.dp)
+                    .fillMaxSize()
+                    .height(260.dp)
                     .clip(RoundedCornerShape(4.dp)),
                 contentScale = ContentScale.Crop,
                 error = painterResource(id = defaultImage)
@@ -222,7 +255,9 @@ fun FilmCard(film: Film, modifier: Modifier = Modifier, onFilmSelected: (Long) -
                 fontSize = 16.sp,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.size(160.dp, 40.dp)
+                modifier = Modifier.size(160.dp, 40.dp),
+                fontWeight = FontWeight(700),
+                letterSpacing = 0.1.sp,
             )
         }
     }
@@ -235,20 +270,27 @@ fun ErrorDialog(onRetry: () -> Unit) {
     ) {
         Row(
             modifier = Modifier
-                .size(344.dp, 56.dp)
+                .padding(8.dp)
+                .fillMaxWidth()
+                .height(56.dp)
                 .align(Alignment.BottomCenter)
                 .background(DialogBackground)
-                .padding(16.dp),
+                .padding(top = 18.dp, start = 16.dp, end = 16.dp, bottom = 18.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = stringResource(R.string.NetworkConnectionError),
                 color = White,
-                fontFamily = FontFamily(Font(R.font.roboto_regular))
+                fontSize = 15.sp,
+                fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                fontWeight = FontWeight(400),
             )
             Text(text = stringResource(R.string.Repeat),
                 fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                fontSize = 14.sp,
+                fontWeight = FontWeight(400),
+                textAlign = TextAlign.End,
                 color = SelectedGenreBackground,
                 modifier = Modifier.clickable {
                     onRetry()
