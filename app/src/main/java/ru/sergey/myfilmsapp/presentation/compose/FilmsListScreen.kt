@@ -45,8 +45,8 @@ import coil.compose.AsyncImage
 import ru.sergey.domain.model.Film
 import ru.sergey.myfilmsapp.R
 import ru.sergey.myfilmsapp.presentation.theme.ui.BackgroundColor
-import ru.sergey.myfilmsapp.presentation.theme.ui.MyBlack
 import ru.sergey.myfilmsapp.presentation.theme.ui.DialogBackground
+import ru.sergey.myfilmsapp.presentation.theme.ui.MyBlack
 import ru.sergey.myfilmsapp.presentation.theme.ui.PrimaryColor
 import ru.sergey.myfilmsapp.presentation.theme.ui.SelectedGenreBackground
 import ru.sergey.myfilmsapp.presentation.theme.ui.White

@@ -39,8 +39,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import ru.sergey.domain.model.Film
 import ru.sergey.myfilmsapp.R
-import ru.sergey.myfilmsapp.presentation.theme.ui.MyBlack
 import ru.sergey.myfilmsapp.presentation.theme.ui.GreyFont
+import ru.sergey.myfilmsapp.presentation.theme.ui.MyBlack
 import ru.sergey.myfilmsapp.presentation.theme.ui.PrimaryColor
 import ru.sergey.myfilmsapp.presentation.theme.ui.White
 import java.math.BigDecimal
@@ -124,9 +124,8 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
                     .padding(top = 8.dp)
                     .fillMaxWidth()
                     .height(20.dp),
-                text = (film.genres.takeIf { it.isNotEmpty() }?.joinToString(", ") ?: "")
-
-                        + ", " + (film.year.takeIf { it > 0 }?.toString() ?: "???") + stringResource(R.string.year),
+                text = (film.genres.takeIf { it.isNotEmpty() }?.joinToString(separator = ", ", postfix = ", ") ?: "")
+                        + (film.year.takeIf { it > 0 }?.toString() ?: "???") + stringResource(R.string.year),
                 fontSize = 16.sp,
                 fontWeight = FontWeight(400),
                 fontFamily = FontFamily(Font(R.font.roboto_regular)),
@@ -143,10 +142,10 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                val roundedRating = BigDecimal( film.rating ).setScale(1, RoundingMode.HALF_UP)
+                val roundedRating = BigDecimal(film.rating).setScale(1, RoundingMode.HALF_UP)
 
                 Text(
-                    text = roundedRating.takeIf { it > BigDecimal.ZERO }?.toString() ?: "???", // Проверка на пустой рейтинг
+                    text = roundedRating.toString(),
                     fontSize = 24.sp,
                     fontFamily = FontFamily(Font(R.font.roboto_bold)),
                     fontWeight = FontWeight(700),
@@ -181,22 +180,22 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
 }
 
 @Composable
-fun MoviePoster(url: String, modifier: Modifier) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ) {
-        AsyncImage(
-            model = if (url.isNotEmpty()) url else R.drawable.img_not_find, // Использование заглушки на случай пустого URL
-            contentDescription = null,
-            modifier = Modifier
-                .size(132.dp, 201.dp)
-                .clip(RoundedCornerShape(4.dp))
-                .background(White),
-            contentScale = ContentScale.Crop,
-            error = painterResource(id = R.drawable.img_not_find),
-            placeholder = painterResource(id = R.drawable.img_not_find)
-        )
-    }
+fun MoviePoster(url: String?, modifier: Modifier) {
+        Box(
+            modifier = modifier
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            AsyncImage(
+                model = url,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(132.dp, 201.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(White),
+                contentScale = ContentScale.Crop,
+                error = painterResource(id = R.drawable.img_not_find),
+                placeholder = painterResource(id = R.drawable.img_not_find)
+            )
+        }
 }
