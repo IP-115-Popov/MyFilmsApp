@@ -25,11 +25,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -61,7 +59,7 @@ fun FilmListScreen(
 ) {
     val genres = remember { vm.genres }
     val films = vm.films.collectAsState()
-    val selectedGenre = rememberSaveable { mutableStateOf<String?>(null) }
+    val selectedGenre = vm.selectedGenre.collectAsState()//rememberSaveable { mutableStateOf<String?>(null) }
     val isLoadingFailed = vm.isLoadingFailed.collectAsState().value  // Получаем состояние ошибки
     val isLoading = vm.isLoading.collectAsState().value  // Получаем состояние ошибки
 
@@ -143,11 +141,11 @@ fun FilmListScreen(
                         selectedGenre
                     ) {
                         if (selectedGenre.value == genre) {
-                            selectedGenre.value = null
+                            vm.setSelectedGenre(null)
                         } else {
-                            selectedGenre.value = genre
+                            vm.setSelectedGenre(genre)
                         }
-                        vm.getFilms(selectedGenre.value)
+                        vm.getFilms(vm.selectedGenre.value)
                     }
                 }
                 item {
@@ -198,7 +196,7 @@ fun FilmListScreen(
 fun GenreItem(
     genre: String,
     modifier: Modifier,
-    selectedGenre: MutableState<String?>,
+    selectedGenre: State<String?>,
     onClick: (String) -> Unit
 ) {
     val defaultModifier = Modifier

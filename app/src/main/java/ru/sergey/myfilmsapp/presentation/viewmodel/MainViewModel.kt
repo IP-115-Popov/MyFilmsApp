@@ -24,11 +24,17 @@ class MainViewModel(
             return _films.asStateFlow()
         }
 
-    private val _isLoadingFailed = MutableStateFlow<Boolean>(false)  // Состояние для ошибки
+    private val _isLoadingFailed = MutableStateFlow<Boolean>(false)
     val isLoadingFailed: StateFlow<Boolean> get() = _isLoadingFailed
 
-    private val _isLoading = MutableStateFlow<Boolean>(true)  // Состояние для ошибки
+    private val _isLoading = MutableStateFlow<Boolean>(true)
     val isLoading: StateFlow<Boolean> get() = _isLoading
+
+    private val _selectedGenre = MutableStateFlow<String?>(null)
+    val selectedGenre: StateFlow<String?> get() = _selectedGenre
+    fun setSelectedGenre(value : String?) {
+        _selectedGenre.value = value
+    }
 
     val genres = listOf(
         "Биография",
