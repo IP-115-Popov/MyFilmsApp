@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import ru.sergey.domain.model.Film
 import ru.sergey.myfilmsapp.R
+import ru.sergey.myfilmsapp.presentation.theme.ui.GreyFont
 import ru.sergey.myfilmsapp.presentation.theme.ui.PrimaryColor
 import ru.sergey.myfilmsapp.presentation.theme.ui.White
 import java.math.BigDecimal
@@ -60,7 +61,8 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
                             fontFamily = FontFamily(Font(R.font.roboto_regular)),
                             modifier = Modifier.align(Alignment.Center),
                             fontWeight = FontWeight(500),
-                            letterSpacing = 0.15.sp
+                            letterSpacing = 0.15.sp,
+                            lineHeight = 22.sp
                         )
                     }
                 },
@@ -102,7 +104,8 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
                 fontSize = 26.sp,
                 fontWeight = FontWeight(700),
                 fontFamily = FontFamily(Font(R.font.roboto_bold)),
-                letterSpacing = 0.1.sp
+                letterSpacing = 0.1.sp,
+                lineHeight = 32.sp
             )
             Text(
                 modifier = Modifier.padding(top = 8.dp).fillMaxWidth().height(20.dp),
@@ -110,7 +113,9 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
                 fontSize = 16.sp,
                 fontWeight = FontWeight(400),
                 fontFamily = FontFamily(Font(R.font.roboto_regular)),
-                letterSpacing = 0.1.sp
+                letterSpacing = 0.1.sp,
+                color = GreyFont,
+                lineHeight = 20.sp
             )
             Row(
                 modifier = Modifier.padding(top = 10.dp).fillMaxWidth().height(28.dp),
@@ -123,7 +128,8 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
                     fontFamily = FontFamily(Font(R.font.roboto_bold)),
                     fontWeight = FontWeight(700),
                     color = PrimaryColor,
-                    letterSpacing = 0.1.sp
+                    letterSpacing = 0.1.sp,
+                    lineHeight = 28.sp
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
@@ -132,7 +138,8 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
                     fontWeight = FontWeight(500),
                     fontFamily = FontFamily(Font(R.font.roboto_regular)),
                     color = PrimaryColor,
-                    letterSpacing = 0.1.sp
+                    letterSpacing = 0.1.sp,
+                    lineHeight = 16.sp
                 )
             }
 
@@ -142,7 +149,8 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
                 fontWeight = FontWeight(400),
                 textAlign = TextAlign.Justify,
                 fontFamily = FontFamily(Font(R.font.roboto_regular)),
-                letterSpacing = 0.1.sp
+                letterSpacing = 0.1.sp,
+                lineHeight = 20.sp
             )
         }
     }

@@ -80,7 +80,8 @@ fun FilmListScreen(
                             fontFamily = FontFamily(Font(R.font.roboto_regular)),
                             modifier = Modifier.align(Alignment.Center),
                             fontWeight = FontWeight(500),
-                            letterSpacing = 0.15.sp
+                            letterSpacing = 0.15.sp,
+                            lineHeight = 22.sp
                         )
                     }
                 },
@@ -130,7 +131,8 @@ fun FilmListScreen(
                             fontFamily = FontFamily(Font(R.font.roboto_bold)),
                             modifier = Modifier
                                 .align(Alignment.CenterStart)
-                                .padding(startPadding)
+                                .padding(startPadding),
+                            lineHeight = 22.sp
 
                         )
                     }
@@ -158,6 +160,7 @@ fun FilmListScreen(
                             fontWeight = FontWeight(700),
                             letterSpacing = 0.1.sp,
                             fontFamily = FontFamily(Font(R.font.roboto_bold)),
+                            lineHeight = 22.sp,
                             modifier = Modifier
                                 .align(Alignment.CenterStart)
                                 .padding(startPadding)
@@ -220,6 +223,7 @@ fun GenreItem(
             fontFamily = FontFamily(Font(R.font.roboto_regular)),
             fontWeight = FontWeight(400),
             letterSpacing = 0.1.sp,
+            lineHeight = 20.sp
         )
     }
 }
@@ -248,7 +252,7 @@ fun FilmCard(film: Film, modifier: Modifier = Modifier, onFilmSelected: (Long) -
                 fontSize = 16.sp,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.size(160.dp, 40.dp),
+                modifier = Modifier.size(160.dp, 48.dp).padding(top = 8.dp),
                 fontWeight = FontWeight(700),
                 letterSpacing = 0.1.sp,
             )
@@ -278,12 +282,14 @@ fun ErrorDialog(onRetry: () -> Unit) {
                 fontSize = 15.sp,
                 fontFamily = FontFamily(Font(R.font.roboto_regular)),
                 fontWeight = FontWeight(400),
+                lineHeight = 20.sp
             )
             Text(text = stringResource(R.string.Repeat),
                 fontFamily = FontFamily(Font(R.font.roboto_regular)),
                 fontSize = 14.sp,
                 fontWeight = FontWeight(400),
                 textAlign = TextAlign.End,
+                lineHeight = 16.sp,
                 color = SelectedGenreBackground,
                 modifier = Modifier.clickable {
                     onRetry()

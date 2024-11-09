@@ -9,4 +9,6 @@ val DialogBackground = hexToColor("#232323")
 
 val BackgroundColor = White
 
+val GreyFont = hexToColor("#4B4B4B")
+
 fun hexToColor(hex: String) = Color(android.graphics.Color.parseColor(hex))
