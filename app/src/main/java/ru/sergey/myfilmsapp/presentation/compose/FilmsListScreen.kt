@@ -2,7 +2,6 @@ package ru.sergey.myfilmsapp.presentation.compose
 
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,7 +33,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -43,15 +41,10 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import coil.compose.AsyncImage
-import ru.sergey.data.model.FilmResponse
-import ru.sergey.data.repository.FilmRepositoryImp
 import ru.sergey.domain.model.Film
-import ru.sergey.domain.usecase.GetFilmsUseCase
 import ru.sergey.myfilmsapp.R
 import ru.sergey.myfilmsapp.presentation.theme.ui.BackgroundColor
 import ru.sergey.myfilmsapp.presentation.theme.ui.DialogBackground
@@ -104,7 +97,7 @@ fun FilmListScreen(
                 .fillMaxSize()
                 .background(White)
         )
-        if (isLoading == true && isLoadingFailed == false) {
+        if (isLoading && !isLoadingFailed) {
             //Загрузка
             Box(
                 modifier = Modifier
@@ -116,7 +109,7 @@ fun FilmListScreen(
                     color = SelectedGenreBackground,
                 )
             }
-        } else if (isLoadingFailed == true) {
+        } else if (isLoadingFailed) {
             //Ошибка
             ErrorDialog(onRetry = {
                 vm.getFilms()
@@ -145,15 +138,15 @@ fun FilmListScreen(
                 items(genres) { genre ->
                     GenreItem(genre,
                         modifier = Modifier.padding(startPadding),
-                        selectedGenre,
-                        {
-                            if (selectedGenre.value == genre) {
-                                selectedGenre.value = null
-                            } else {
-                                selectedGenre.value = genre
-                            }
-                            vm.getFilms(selectedGenre.value)
-                        })
+                        selectedGenre
+                    ) {
+                        if (selectedGenre.value == genre) {
+                            selectedGenre.value = null
+                        } else {
+                            selectedGenre.value = genre
+                        }
+                        vm.getFilms(selectedGenre.value)
+                    }
                 }
                 item {
                     Box(
