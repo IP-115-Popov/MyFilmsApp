@@ -1,5 +1,6 @@
 package ru.sergey.myfilmsapp.presentation.compose
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,10 +10,12 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -51,41 +54,37 @@ import java.math.RoundingMode
 fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Box(
-                        modifier = Modifier.fillMaxHeight(),
-                    ) {
-                        Text(
-                            text = if (film.name == null || film.name == "") stringResource(R.string.default_film_name) else film.name,
-                            color = White,
-                            fontSize = 18.sp,
-                            fontFamily = FontFamily(Font(R.font.roboto_regular)),
-                            modifier = Modifier.align(Alignment.Center),
-                            fontWeight = FontWeight(500),
-                            letterSpacing = 0.15.sp,
-                            lineHeight = 22.sp,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        onBackClick()
-                    }) {
-                        Icon(
-                            Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.Back)
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = PrimaryColor,
-                    titleContentColor = White,
-                    navigationIconContentColor = White
-                ),
-                modifier = Modifier.height(56.dp)
+            CenterAlignedTopAppBar(title = {
+                Box(
+                    modifier = Modifier.fillMaxHeight(),
+                ) {
+                    Text(
+                        text = film.getNameOrDefault(stringResource(R.string.default_film_name)),
+                        color = White,
+                        fontSize = 18.sp,
+                        fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                        modifier = Modifier.align(Alignment.Center),
+                        fontWeight = FontWeight(500),
+                        letterSpacing = 0.15.sp,
+                        lineHeight = 22.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+            }, navigationIcon = {
+                IconButton(onClick = {
+                    onBackClick()
+                }) {
+                    Icon(
+                        Icons.Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.Back)
+                    )
+                }
+            }, colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = PrimaryColor,
+                titleContentColor = White,
+                navigationIconContentColor = White
+            ), modifier = Modifier.height(56.dp)
             )
         },
     ) { innerPadding ->
@@ -99,33 +98,34 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(start = 16.dp, end = 16.dp)
+                .verticalScroll(ScrollState(0))
         ) {
-            // Отображаем постер фильма с проверкой на пустой URL
             MoviePoster(film.image_url, modifier = Modifier.padding(top = 24.dp))
 
             Text(
                 modifier = Modifier
                     .padding(top = 24.dp)
                     .fillMaxWidth()
-                    .height(32.dp),
-                text = if (film.localized_name == null || film.localized_name == "")
-                            stringResource(R.string.default_localized_name)
-                       else film.localized_name,
+                    .heightIn(
+                        min = 32.dp
+                    ),
+                text = film.getLocalizedNameOrDefault(stringResource(R.string.default_localized_name)),
                 fontSize = 26.sp,
                 fontWeight = FontWeight(700),
                 fontFamily = FontFamily(Font(R.font.roboto_bold)),
                 letterSpacing = 0.1.sp,
                 lineHeight = 32.sp,
-                color = MyBlack
+                color = MyBlack,
             )
 
-            Text(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .fillMaxWidth()
-                    .height(20.dp),
-                text = (film.genres.takeIf { it.isNotEmpty() }?.joinToString(separator = ", ", postfix = ", ") ?: "")
-                        + (film.year.takeIf { it > 0 }?.toString() ?: "???") + stringResource(R.string.year),
+            Text(modifier = Modifier
+                .padding(top = 8.dp)
+                .fillMaxWidth()
+                .height(20.dp),
+                text = (film.genres.takeIf { it.isNotEmpty() }
+                    ?.joinToString(separator = ", ", postfix = ", ")
+                    ?: "") + (film.year.takeIf { it > 0 }?.toString()
+                    ?: "???") + stringResource(R.string.year),
                 fontSize = 16.sp,
                 fontWeight = FontWeight(400),
                 fontFamily = FontFamily(Font(R.font.roboto_regular)),
@@ -181,21 +181,19 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
 
 @Composable
 fun MoviePoster(url: String?, modifier: Modifier) {
-        Box(
-            modifier = modifier
-                .fillMaxWidth(),
-            contentAlignment = Alignment.Center
-        ) {
-            AsyncImage(
-                model = url,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(132.dp, 201.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(White),
-                contentScale = ContentScale.Crop,
-                error = painterResource(id = R.drawable.img_not_find),
-                placeholder = painterResource(id = R.drawable.img_not_find)
-            )
-        }
+    Box(
+        modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center
+    ) {
+        AsyncImage(
+            model = url,
+            contentDescription = null,
+            modifier = Modifier
+                .size(132.dp, 201.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .background(White),
+            contentScale = ContentScale.Crop,
+            error = painterResource(id = R.drawable.img_not_find),
+            placeholder = painterResource(id = R.drawable.img_not_find)
+        )
+    }
 }
