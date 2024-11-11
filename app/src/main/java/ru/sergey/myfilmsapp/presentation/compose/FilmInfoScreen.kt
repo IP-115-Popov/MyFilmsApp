@@ -49,51 +49,10 @@ import ru.sergey.myfilmsapp.presentation.theme.ui.White
 import java.math.BigDecimal
 import java.math.RoundingMode
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
     Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(title = {
-                Box(
-                    modifier = Modifier.fillMaxHeight(),
-                )  {
-                    Text(
-                        text = film.getNameOrDefault(stringResource(R.string.default_film_name)),
-                        color = White,
-                        fontSize = 18.sp,
-                        fontFamily = FontFamily(Font(R.font.roboto_regular)),
-                        modifier = Modifier.align(Alignment.Center),
-                        fontWeight = FontWeight(500),
-                        letterSpacing = 0.15.sp,
-                        lineHeight = 22.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                }
-            }, navigationIcon = {
-                Box(
-                    modifier = Modifier.fillMaxHeight(),
-                ) {
-                    IconButton(
-                        onClick = {
-                            onBackClick()
-                        },
-                        modifier = Modifier.align(Alignment.CenterStart)
-                    ) {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(R.drawable.ic_baseline_keyboard_backspace_24),
-                            contentDescription = stringResource(R.string.Back)
-                        )
-                    }
-                }
-            }, colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = PrimaryColor,
-                titleContentColor = White,
-                navigationIconContentColor = White
-            ), modifier = Modifier.height(56.dp)
-            )
-        },
+        topBar = { myTopBar(film, onBackClick) },
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -109,83 +68,147 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
         ) {
             MoviePoster(film.image_url, modifier = Modifier.padding(top = 24.dp))
 
-            Text(
-                modifier = Modifier
-                    .padding(top = 24.dp)
-                    .fillMaxWidth()
-                    .heightIn(
-                        min = 32.dp
-                    ),
-                text = film.getLocalizedNameOrDefault(stringResource(R.string.default_localized_name)),
-                fontSize = 26.sp,
-                fontWeight = FontWeight(700),
-                fontFamily = FontFamily(Font(R.font.roboto_bold)),
-                letterSpacing = 0.1.sp,
-                lineHeight = 32.sp,
-                color = MyBlack,
-            )
+            FilmTitle(film)
 
-            Text(modifier = Modifier
-                .padding(top = 8.dp)
-                .fillMaxWidth()
-                .height(20.dp),
-                text = (film.genres.takeIf { it.isNotEmpty() }
-                    ?.joinToString(separator = ", ", postfix = ", ")
-                    ?: "") + (film.year.takeIf { it > 0 }?.toString()
-                    ?: "???") + stringResource(R.string.year),
-                fontSize = 16.sp,
-                fontWeight = FontWeight(400),
-                fontFamily = FontFamily(Font(R.font.roboto_regular)),
-                letterSpacing = 0.1.sp,
-                color = GreyFont,
-                lineHeight = 20.sp
-            )
+            FilmMetaInfo(film)
 
-            Row(
-                modifier = Modifier
-                    .padding(top = 10.dp)
-                    .fillMaxWidth()
-                    .height(28.dp),
-                verticalAlignment = Alignment.Bottom
-            ) {
+            RatingSection(film)
 
-                val roundedRating = BigDecimal(film.rating).setScale(1, RoundingMode.HALF_UP)
-
-                Text(
-                    text = roundedRating.toString(),
-                    fontSize = 24.sp,
-                    fontFamily = FontFamily(Font(R.font.roboto_bold)),
-                    fontWeight = FontWeight(700),
-                    color = PrimaryColor,
-                    letterSpacing = 0.1.sp,
-                    lineHeight = 28.sp,
-                    modifier = Modifier.padding(top = 2.dp),
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "КиноПоиск",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight(500),
-                    fontFamily = FontFamily(Font(R.font.roboto_regular)),
-                    color = PrimaryColor,
-                    letterSpacing = 0.1.sp,
-                    lineHeight = 16.sp,
-                    modifier = Modifier
-                )
-            }
-
-            Text(
-                modifier = Modifier.padding(top = 14.dp),
-                text = if (film.description == null) "" else film.description,
-                fontWeight = FontWeight(400),
-                textAlign = TextAlign.Justify,
-                fontFamily = FontFamily(Font(R.font.roboto_regular)),
-                letterSpacing = 0.1.sp,
-                lineHeight = 20.sp,
-                color = MyBlack
-            )
+            FilmDescription(film)
         }
     }
+}
+
+@Composable
+fun FilmDescription(film: Film) {
+    Text(
+        modifier = Modifier.padding(top = 14.dp),
+        text = if (film.description == null) "" else film.description,
+        fontWeight = FontWeight(400),
+        textAlign = TextAlign.Justify,
+        fontFamily = FontFamily(Font(R.font.roboto_regular)),
+        letterSpacing = 0.1.sp,
+        lineHeight = 20.sp,
+        color = MyBlack
+    )
+}
+
+@Composable
+fun RatingSection(film: Film) {
+    Row(
+        modifier = Modifier
+            .padding(top = 10.dp)
+            .fillMaxWidth()
+            .height(28.dp),
+        verticalAlignment = Alignment.Bottom
+    ) {
+
+        val roundedRating = BigDecimal(film.rating).setScale(1, RoundingMode.HALF_UP)
+
+        Text(
+            text = roundedRating.toString(),
+            fontSize = 24.sp,
+            fontFamily = FontFamily(Font(R.font.roboto_bold)),
+            fontWeight = FontWeight(700),
+            color = PrimaryColor,
+            letterSpacing = 0.1.sp,
+            lineHeight = 28.sp,
+            modifier = Modifier.padding(top = 2.dp),
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = "КиноПоиск",
+            fontSize = 16.sp,
+            fontWeight = FontWeight(500),
+            fontFamily = FontFamily(Font(R.font.roboto_regular)),
+            color = PrimaryColor,
+            letterSpacing = 0.1.sp,
+            lineHeight = 16.sp,
+            modifier = Modifier
+        )
+    }
+}
+
+@Composable
+fun FilmMetaInfo(film: Film) {
+    Text(modifier = Modifier
+        .padding(top = 8.dp)
+        .fillMaxWidth()
+        .height(20.dp),
+        text = (film.genres.takeIf { it.isNotEmpty() }
+            ?.joinToString(separator = ", ", postfix = ", ")
+            ?: "") + (film.year.takeIf { it > 0 }?.toString()
+            ?: "???") + stringResource(R.string.year),
+        fontSize = 16.sp,
+        fontWeight = FontWeight(400),
+        fontFamily = FontFamily(Font(R.font.roboto_regular)),
+        letterSpacing = 0.1.sp,
+        color = GreyFont,
+        lineHeight = 20.sp
+    )
+}
+
+@Composable
+fun FilmTitle(film: Film) {
+    Text(
+        modifier = Modifier
+            .padding(top = 24.dp)
+            .fillMaxWidth()
+            .heightIn(
+                min = 32.dp
+            ),
+        text = film.getLocalizedNameOrDefault(stringResource(R.string.default_localized_name)),
+        fontSize = 26.sp,
+        fontWeight = FontWeight(700),
+        fontFamily = FontFamily(Font(R.font.roboto_bold)),
+        letterSpacing = 0.1.sp,
+        lineHeight = 32.sp,
+        color = MyBlack,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun myTopBar(film: Film, onBackClick: () -> Unit) {
+    CenterAlignedTopAppBar(title = {
+        Box(
+            modifier = Modifier.fillMaxHeight(),
+        ) {
+            Text(
+                text = film.getNameOrDefault(stringResource(R.string.default_film_name)),
+                color = White,
+                fontSize = 18.sp,
+                fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                modifier = Modifier.align(Alignment.Center),
+                fontWeight = FontWeight(500),
+                letterSpacing = 0.15.sp,
+                lineHeight = 22.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+    }, navigationIcon = {
+        Box(
+            modifier = Modifier.fillMaxHeight(),
+        ) {
+            IconButton(
+                onClick = {
+                    onBackClick()
+                },
+                modifier = Modifier.align(Alignment.CenterStart)
+            ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_baseline_keyboard_backspace_24),
+                    contentDescription = stringResource(R.string.Back)
+                )
+            }
+        }
+    }, colors = TopAppBarDefaults.topAppBarColors(
+        containerColor = PrimaryColor,
+        titleContentColor = White,
+        navigationIconContentColor = White
+    ), modifier = Modifier.height(56.dp)
+    )
 }
 
 @Composable

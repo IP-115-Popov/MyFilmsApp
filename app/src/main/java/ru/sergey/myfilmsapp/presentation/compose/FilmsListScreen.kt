@@ -51,8 +51,6 @@ import ru.sergey.myfilmsapp.presentation.theme.ui.SelectedGenreBackground
 import ru.sergey.myfilmsapp.presentation.theme.ui.White
 import ru.sergey.myfilmsapp.presentation.viewmodel.MainViewModel
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilmListScreen(
     vm: MainViewModel, onFilmSelected: (Long) -> Unit
@@ -65,30 +63,7 @@ fun FilmListScreen(
 
     Log.i("FilmListScreen", "Films: ${films.value.size}, isLoadingFailed: $isLoadingFailed")
     Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Box(
-                        modifier = Modifier.fillMaxHeight(),
-                    ) {
-                        Text(
-                            text = stringResource(R.string.Films),
-                            color = White,
-                            fontSize = 18.sp,
-                            fontFamily = FontFamily(Font(R.font.roboto_regular)),
-                            modifier = Modifier.align(Alignment.Center),
-                            fontWeight = FontWeight(500),
-                            letterSpacing = 0.15.sp,
-                            lineHeight = 22.sp
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = PrimaryColor, titleContentColor = White
-                ),
-                modifier = Modifier.height(56.dp)
-            )
-        },
+        topBar = { FilmListTopBar() },
     ) { innerPadding ->
         val startPadding = PaddingValues(start = 16.dp)
         Box(
@@ -97,53 +72,19 @@ fun FilmListScreen(
                 .background(White)
         )
         if (isLoading && !isLoadingFailed) {
-            //Загрузка
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(White),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(
-                    color = SelectedGenreBackground,
-                )
-            }
+            LoadingIndicator()
         } else if (isLoadingFailed) {
-            //Ошибка
-            ErrorDialog(onRetry = {
-                vm.getFilms()
-            })
+            ErrorDialog(onRetry = { vm.getFilms() })
         } else {
             LazyColumn(
                 contentPadding = innerPadding, modifier = Modifier.fillMaxSize()
             ) {
                 item {
-                    Box(
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                            .height(40.dp)
-                            .fillMaxWidth()
-                    ) {
-                        Text(
-                            text = stringResource(R.string.Genres),
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight(700),
-                            letterSpacing = 0.1.sp,
-                            fontFamily = FontFamily(Font(R.font.roboto_bold)),
-                            modifier = Modifier
-                                .align(Alignment.CenterStart)
-                                .padding(startPadding),
-                            lineHeight = 22.sp,
-                            color = MyBlack
-
-                        )
-                    }
+                    HederGenres(startPadding)
                 }
                 items(genres.value) { genre ->
                     GenreItem(
-                        genre,
-                        modifier = Modifier.padding(startPadding),
-                        selectedGenre
+                        genre, modifier = Modifier.padding(startPadding), selectedGenre
                     ) {
                         if (selectedGenre.value == genre) {
                             vm.setSelectedGenre(null)
@@ -154,25 +95,7 @@ fun FilmListScreen(
                     }
                 }
                 item {
-                    Box(
-                        modifier = Modifier
-                            .padding(top = 16.dp)
-                            .height(40.dp)
-                            .fillMaxWidth()
-                    ) {
-                        Text(
-                            text = stringResource(R.string.Films),
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight(700),
-                            letterSpacing = 0.1.sp,
-                            fontFamily = FontFamily(Font(R.font.roboto_bold)),
-                            lineHeight = 22.sp,
-                            modifier = Modifier
-                                .align(Alignment.CenterStart)
-                                .padding(startPadding),
-                            color = MyBlack
-                        )
-                    }
+                    HederFilms(startPadding)
                 }
                 items(films.value.chunked(2)) { row ->
                     Row(
@@ -186,15 +109,13 @@ fun FilmListScreen(
                             row[0],
                             Modifier
                                 .fillMaxWidth(0.5f)
-                                .padding(end = 4.dp),
-                            onFilmSelected
+                                .padding(end = 4.dp), onFilmSelected
                         )
                         if (row.getOrNull(1) != null) FilmCard(
                             row[1],
                             Modifier
                                 .fillMaxWidth()
-                                .padding(start = 4.dp),
-                            onFilmSelected
+                                .padding(start = 4.dp), onFilmSelected
                         )
                     }
                 }
@@ -204,18 +125,99 @@ fun FilmListScreen(
 }
 
 @Composable
+fun HederFilms(startPadding: PaddingValues) {
+    Box(
+        modifier = Modifier
+            .padding(top = 16.dp)
+            .height(40.dp)
+            .fillMaxWidth()
+    ) {
+        Text(
+            text = stringResource(R.string.Films),
+            fontSize = 20.sp,
+            fontWeight = FontWeight(700),
+            letterSpacing = 0.1.sp,
+            fontFamily = FontFamily(Font(R.font.roboto_bold)),
+            lineHeight = 22.sp,
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .padding(startPadding),
+            color = MyBlack
+        )
+    }
+}
+
+@Composable
+fun HederGenres(startPadding: PaddingValues) {
+    Box(
+        modifier = Modifier
+            .padding(top = 8.dp)
+            .height(40.dp)
+            .fillMaxWidth()
+    ) {
+        Text(
+            text = stringResource(R.string.Genres),
+            fontSize = 20.sp,
+            fontWeight = FontWeight(700),
+            letterSpacing = 0.1.sp,
+            fontFamily = FontFamily(Font(R.font.roboto_bold)),
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .padding(startPadding),
+            lineHeight = 22.sp,
+            color = MyBlack
+
+        )
+    }
+}
+
+@Composable
+fun LoadingIndicator() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(White), contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            color = SelectedGenreBackground,
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FilmListTopBar() {
+    CenterAlignedTopAppBar(
+        title = {
+            Box(
+                modifier = Modifier.fillMaxHeight(),
+            ) {
+                Text(
+                    text = stringResource(R.string.Films),
+                    color = White,
+                    fontSize = 18.sp,
+                    fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                    modifier = Modifier.align(Alignment.Center),
+                    fontWeight = FontWeight(500),
+                    letterSpacing = 0.15.sp,
+                    lineHeight = 22.sp
+                )
+            }
+        }, colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = PrimaryColor, titleContentColor = White
+        ), modifier = Modifier.height(56.dp)
+    )
+}
+
+@Composable
 fun GenreItem(
-    genre: String,
-    modifier: Modifier,
-    selectedGenre: State<String?>,
-    onClick: (String) -> Unit
+    genre: String, modifier: Modifier, selectedGenre: State<String?>, onClick: (String) -> Unit
 ) {
     val defaultModifier = Modifier
         .fillMaxWidth()
         .height(40.dp)
         .background(
-            if (selectedGenre.value == genre)
-                SelectedGenreBackground
+            if (selectedGenre.value == genre) SelectedGenreBackground
             else BackgroundColor
         )
         .clickable {
@@ -241,8 +243,7 @@ fun GenreItem(
 @Composable
 fun FilmCard(film: Film, modifier: Modifier = Modifier, onFilmSelected: (Long) -> Unit) {
     val defaultImage = R.drawable.img_not_find
-    Surface(modifier = modifier
-        .clickable {
+    Surface(modifier = modifier.clickable {
             onFilmSelected(film.id)
         }) {
         Column(Modifier.background(BackgroundColor)) {
