@@ -24,6 +24,9 @@ class MainViewModel(
             return _films.asStateFlow()
         }
 
+    private val _genres = MutableStateFlow<List<String>>(mutableListOf())
+    val genres: StateFlow<List<String>> = _genres
+
     private val _isLoadingFailed = MutableStateFlow<Boolean>(false)
     val isLoadingFailed: StateFlow<Boolean> get() = _isLoadingFailed
 
@@ -32,34 +35,18 @@ class MainViewModel(
 
     private val _selectedGenre = MutableStateFlow<String?>(null)
     val selectedGenre: StateFlow<String?> get() = _selectedGenre
-    fun setSelectedGenre(value : String?) {
+    fun setSelectedGenre(value: String?) {
         _selectedGenre.value = value
     }
-
-    val genres = listOf(
-        "Биография",
-        "Боевик",
-        "Детектив",
-        "Драма",
-        "Комедия",
-        "Криминал",
-        "Мелодрама",
-        "Мюзикл",
-        "Приключения",
-        "Триллер",
-        "Ужасы",
-        "Фантастика"
-    )
 
     init {
         Log.i("myLog", "MainViewModel Created")
         getFilms()
     }
 
-    fun getFilms(genresFilter: String? = null) {
-
+    fun getFilms() {
+        val genresFilter: String? = selectedGenre.value
         _isLoading.value = true
-        var items: List<Film> = emptyList()
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -77,18 +64,12 @@ class MainViewModel(
                             // Успешная загрузка данных
                             _isLoadingFailed.value = false
                             _isLoading.value = false
-                            items = filmListEither.value
-                            // Обновляем список фильмов
-                            if (genresFilter == null) {
-                                _films.value = items
-                            } else {
-                                _films.value = items.filter {
-                                    it.genres.any { g ->
-                                        val genresFilterLow = genresFilter.toLowerCase()
-                                        g == genresFilterLow
-                                    }
-                                }
-                            }
+
+                            val items: List<Film> = filmListEither.value
+
+                            //Обновляем список жанров и фильмов
+                            updateGenres(items)
+                            updateFilms(genresFilter, items)
                         }
                     }
                 }
@@ -97,6 +78,26 @@ class MainViewModel(
                     _isLoadingFailed.value = true
                     _isLoading.value = false
                     _films.value = emptyList() // Очистить список фильмов при ошибке
+                }
+            }
+        }
+    }
+
+    private fun updateGenres(items: List<Film>) {
+        _genres.value = items.flatMap { it.genres }.distinct()
+    }
+
+    private fun updateFilms(
+        genresFilter: String?,
+        items: List<Film>
+    ) {
+        if (genresFilter == null) {
+            _films.value = items
+        } else {
+            _films.value = items.filter {
+                it.genres.any { g ->
+                    val genresFilterLow = genresFilter.toLowerCase()
+                    g == genresFilterLow
                 }
             }
         }

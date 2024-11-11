@@ -27,7 +27,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -58,11 +57,11 @@ import ru.sergey.myfilmsapp.presentation.viewmodel.MainViewModel
 fun FilmListScreen(
     vm: MainViewModel, onFilmSelected: (Long) -> Unit
 ) {
-    val genres = remember { vm.genres }
+    val genres = vm.genres.collectAsState()
     val films = vm.films.collectAsState()
-    val selectedGenre = vm.selectedGenre.collectAsState()//rememberSaveable { mutableStateOf<String?>(null) }
-    val isLoadingFailed = vm.isLoadingFailed.collectAsState().value  // Получаем состояние ошибки
-    val isLoading = vm.isLoading.collectAsState().value  // Получаем состояние ошибки
+    val selectedGenre = vm.selectedGenre.collectAsState()
+    val isLoadingFailed = vm.isLoadingFailed.collectAsState().value
+    val isLoading = vm.isLoading.collectAsState().value
 
     Log.i("FilmListScreen", "Films: ${films.value.size}, isLoadingFailed: $isLoadingFailed")
     Scaffold(
@@ -120,7 +119,10 @@ fun FilmListScreen(
             ) {
                 item {
                     Box(
-                        modifier = Modifier.padding(top = 8.dp).height(40.dp).fillMaxWidth()
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .height(40.dp)
+                            .fillMaxWidth()
                     ) {
                         Text(
                             text = stringResource(R.string.Genres),
@@ -137,8 +139,9 @@ fun FilmListScreen(
                         )
                     }
                 }
-                items(genres) { genre ->
-                    GenreItem(genre,
+                items(genres.value) { genre ->
+                    GenreItem(
+                        genre,
                         modifier = Modifier.padding(startPadding),
                         selectedGenre
                     ) {
@@ -147,12 +150,15 @@ fun FilmListScreen(
                         } else {
                             vm.setSelectedGenre(genre)
                         }
-                        vm.getFilms(vm.selectedGenre.value)
+                        vm.getFilms()
                     }
                 }
                 item {
                     Box(
-                        modifier = Modifier.padding(top = 16.dp).height(40.dp).fillMaxWidth()
+                        modifier = Modifier
+                            .padding(top = 16.dp)
+                            .height(40.dp)
+                            .fillMaxWidth()
                     ) {
                         Text(
                             text = stringResource(R.string.Films),
@@ -173,18 +179,20 @@ fun FilmListScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(startPadding)
-                            .padding(top = 8.dp, bottom =  8.dp, end = 16.dp),
+                            .padding(top = 8.dp, bottom = 8.dp, end = 16.dp),
                         horizontalArrangement = Arrangement.Absolute.SpaceBetween
                     ) {
                         if (row.getOrNull(0) != null) FilmCard(
                             row[0],
-                            Modifier.fillMaxWidth(0.5f)
-                                .padding( end = 4.dp),
+                            Modifier
+                                .fillMaxWidth(0.5f)
+                                .padding(end = 4.dp),
                             onFilmSelected
                         )
                         if (row.getOrNull(1) != null) FilmCard(
                             row[1],
-                            Modifier.fillMaxWidth()
+                            Modifier
+                                .fillMaxWidth()
                                 .padding(start = 4.dp),
                             onFilmSelected
                         )
@@ -255,7 +263,9 @@ fun FilmCard(film: Film, modifier: Modifier = Modifier, onFilmSelected: (Long) -
                 fontSize = 16.sp,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.size(160.dp, 48.dp).padding(top = 8.dp),
+                modifier = Modifier
+                    .size(160.dp, 48.dp)
+                    .padding(top = 8.dp),
                 fontWeight = FontWeight(700),
                 letterSpacing = 0.1.sp,
                 color = MyBlack
