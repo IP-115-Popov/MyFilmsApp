@@ -17,11 +17,11 @@ class MainViewModel(
     private val getFilmsUseCase: GetFilmsUseCase
 ) : ViewModel() {
 
-    private val _films = MutableStateFlow<List<Film>>(mutableListOf())
-    val films: StateFlow<List<Film>>
+    private val _filmsForShow = MutableStateFlow<List<Film>>(mutableListOf())
+    val filmsForShow: StateFlow<List<Film>>
         get() {
-            _films.value = _films.value.sortedBy { it.localized_name }
-            return _films.asStateFlow()
+            _filmsForShow.value = _filmsForShow.value.sortedBy { it.localized_name }
+            return _filmsForShow.asStateFlow()
         }
 
     private val _genres = MutableStateFlow<List<String>>(mutableListOf())
@@ -39,13 +39,15 @@ class MainViewModel(
         _selectedGenre.value = value
     }
 
+    var items: List<Film> = emptyList()
+
     init {
         Log.i("myLog", "MainViewModel Created")
-        getFilms()
+        downloadFilms()
     }
 
-    fun getFilms() {
-        val genresFilter: String? = selectedGenre.value
+
+    fun downloadFilms() {
         _isLoading.value = true
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -65,11 +67,12 @@ class MainViewModel(
                             _isLoadingFailed.value = false
                             _isLoading.value = false
 
-                            val items: List<Film> = filmListEither.value
+                            items = filmListEither.value
 
                             //Обновляем список жанров и фильмов
-                            updateGenres(items)
-                            updateFilms(genresFilter, items)
+                            updateGenres()
+                            updateFilms()
+
                         }
                     }
                 }
@@ -77,24 +80,23 @@ class MainViewModel(
                 withContext(Dispatchers.Main) {
                     _isLoadingFailed.value = true
                     _isLoading.value = false
-                    _films.value = emptyList() // Очистить список фильмов при ошибке
+                    _filmsForShow.value = emptyList() // Очистить список фильмов при ошибке
                 }
             }
         }
     }
 
-    private fun updateGenres(items: List<Film>) {
+
+    fun updateGenres() {
         _genres.value = items.flatMap { it.genres }.distinct()
     }
 
-    private fun updateFilms(
-        genresFilter: String?,
-        items: List<Film>
-    ) {
+    fun updateFilms() {
+        val genresFilter: String? = selectedGenre.value
         if (genresFilter == null) {
-            _films.value = items
+            _filmsForShow.value = items
         } else {
-            _films.value = items.filter {
+            _filmsForShow.value = items.filter {
                 it.genres.any { g ->
                     val genresFilterLow = genresFilter.toLowerCase()
                     g == genresFilterLow

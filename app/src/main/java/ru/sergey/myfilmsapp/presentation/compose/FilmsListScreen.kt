@@ -56,7 +56,7 @@ fun FilmListScreen(
     vm: MainViewModel, onFilmSelected: (Long) -> Unit
 ) {
     val genres = vm.genres.collectAsState()
-    val films = vm.films.collectAsState()
+    val films = vm.filmsForShow.collectAsState()
     val selectedGenre = vm.selectedGenre.collectAsState()
     val isLoadingFailed = vm.isLoadingFailed.collectAsState().value
     val isLoading = vm.isLoading.collectAsState().value
@@ -74,7 +74,7 @@ fun FilmListScreen(
         if (isLoading && !isLoadingFailed) {
             LoadingIndicator()
         } else if (isLoadingFailed) {
-            ErrorDialog(onRetry = { vm.getFilms() })
+            ErrorDialog(onRetry = { vm.downloadFilms() })
         } else {
             LazyColumn(
                 contentPadding = innerPadding, modifier = Modifier.fillMaxSize()
@@ -91,7 +91,7 @@ fun FilmListScreen(
                         } else {
                             vm.setSelectedGenre(genre)
                         }
-                        vm.getFilms()
+                        vm.updateFilms()
                     }
                 }
                 item {
@@ -244,8 +244,8 @@ fun GenreItem(
 fun FilmCard(film: Film, modifier: Modifier = Modifier, onFilmSelected: (Long) -> Unit) {
     val defaultImage = R.drawable.img_not_find
     Surface(modifier = modifier.clickable {
-            onFilmSelected(film.id)
-        }) {
+        onFilmSelected(film.id)
+    }) {
         Column(Modifier.background(BackgroundColor)) {
             AsyncImage(
                 model = film.image_url,

@@ -37,7 +37,7 @@ class FilmInfoFragment() : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val filmId = arguments?.getLong(Сonstant.FILM_ID)
-        val film = vm.films.value.find { it.id == filmId }
+        val film = vm.filmsForShow.value.find { it.id == filmId }
         binding.fragmentFilmInfoCompose.setContent @OptIn(ExperimentalLayoutApi::class) {
             FilmInfoScreen(film!!, ::onBackClick)
         }
