@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -29,9 +27,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -57,7 +57,7 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
             CenterAlignedTopAppBar(title = {
                 Box(
                     modifier = Modifier.fillMaxHeight(),
-                ) {
+                )  {
                     Text(
                         text = film.getNameOrDefault(stringResource(R.string.default_film_name)),
                         color = White,
@@ -72,13 +72,20 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
                     )
                 }
             }, navigationIcon = {
-                IconButton(onClick = {
-                    onBackClick()
-                }) {
-                    Icon(
-                        Icons.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.Back)
-                    )
+                Box(
+                    modifier = Modifier.fillMaxHeight(),
+                ) {
+                    IconButton(
+                        onClick = {
+                            onBackClick()
+                        },
+                        modifier = Modifier.align(Alignment.CenterStart)
+                    ) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.ic_baseline_keyboard_backspace_24),
+                            contentDescription = stringResource(R.string.Back)
+                        )
+                    }
                 }
             }, colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = PrimaryColor,
@@ -139,7 +146,7 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
                     .padding(top = 10.dp)
                     .fillMaxWidth()
                     .height(28.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.Bottom
             ) {
 
                 val roundedRating = BigDecimal(film.rating).setScale(1, RoundingMode.HALF_UP)
@@ -151,7 +158,8 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
                     fontWeight = FontWeight(700),
                     color = PrimaryColor,
                     letterSpacing = 0.1.sp,
-                    lineHeight = 28.sp
+                    lineHeight = 28.sp,
+                    modifier = Modifier.padding(top = 2.dp),
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
@@ -161,7 +169,8 @@ fun FilmInfoScreen(film: Film, onBackClick: () -> Unit) {
                     fontFamily = FontFamily(Font(R.font.roboto_regular)),
                     color = PrimaryColor,
                     letterSpacing = 0.1.sp,
-                    lineHeight = 16.sp
+                    lineHeight = 16.sp,
+                    modifier = Modifier
                 )
             }
 
